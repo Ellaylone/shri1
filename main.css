@@ -1,11 +1,61 @@
+body {
+    background-color: #ededed;
+}
+
+.swiper {
+    height: 25px;
+}
+
+.swiper__arrow {
+    cursor: pointer;
+    width: 25px;
+    height: 25px;
+    background-color: #dbdbdc;
+    position: absolute;
+}
+
+.swiper__arrow__left {
+    left: 0px;
+}
+
+.swiper__arrow__right {
+    right: 0px;
+}
+
+.swiper__scrollbar {
+    height: 25px;
+    border: 1px solid #dbdada;
+    width: auto;
+    position: absolute;
+    left: 30px;
+    right: 30px;
+    cursor: pointer;
+    background-color: #ededed;
+    box-sizing: border-box;
+}
+
+.swiper__scrollbar__drag {
+    background-color: #bbbcbf;
+    height: 100%;
+    width: 100%;
+    border: 3px solid #ededed;
+    position: relative;
+    box-sizing: border-box;
+}
+
 .tvguide__channels {
+    padding: 0px;
     width: 70px;
     display: block;
     list-style-type: none;
+    background-color: white;
+    position: absolute;
 }
 
 .tvguide__channels__channel {
     width: 70px;
     height: 70px;
     background: url(images/channels.png) no-repeat;
+    border-right: 1px solid #eee;
+    border-bottom: 1px solid #eee;
 }
