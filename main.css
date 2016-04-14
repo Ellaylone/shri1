@@ -1,1 +1,11 @@
+.tvguide__channels {
+    width: 70px;
+    display: block;
+    list-style-type: none;
+}
 
+.tvguide__channels__channel {
+    width: 70px;
+    height: 70px;
+    background: url(images/channels.png) no-repeat;
+}
