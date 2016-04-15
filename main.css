@@ -2,6 +2,36 @@ body {
     background-color: #ededed;
 }
 
+.needsclick {
+    cursor: pointer;
+}
+
+.wrapper {
+    width: 90%;
+    margin: 0 auto;
+    position: relative;
+}
+
+.tvguide-controls__right {
+    float: right;
+}
+
+.tvguide-controls__channelselect {
+    display: block;
+    background-color: #f7636a;
+    color: white;
+    padding: 12px 20px;
+    font-size: 12px;
+}
+
+.tvguide-controls__channelselect:hover {
+    background-color: #c93d3d;
+}
+
+.tvguide-filters__genre {
+    display: inline-block;
+}
+
 .swiper {
     height: 25px;
 }
