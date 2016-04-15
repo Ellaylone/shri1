@@ -1,0 +1,56 @@
+{"channels": [
+    {
+        "id": 0,
+        "name": "Первый",
+        "imagePosition": [0, 0],
+        "default": true
+    },
+    {
+        "id": 1,
+        "name": "НТВ",
+        "imagePosition": [-70, 0],
+        "default": true
+    },
+    {
+        "id": 2,
+        "name": "ТНТ",
+        "imagePosition": [-140, 0],
+        "default": false
+    },
+    {
+        "id": 3,
+        "name": "ТВЦ",
+        "imagePosition": [0, -70],
+        "default": true
+    },
+    {
+        "id": 4,
+        "name": "Звезда",
+        "imagePosition": [-70, -70],
+        "default": true
+    },
+    {
+        "id": 5,
+        "name": "2x2",
+        "imagePosition": [-140, -70],
+        "default": false
+    },
+    {
+        "id": 6,
+        "name": "Россия 2",
+        "imagePosition": [0, -140],
+        "default": true
+    },
+    {
+        "id": 7,
+        "name": "Россия 1",
+        "imagePosition": [-70, -140],
+        "default": true
+    },
+    {
+        "id": 8,
+        "name": "ТВ 3",
+        "imagePosition": [-140, -140],
+        "default": false
+    },
+]}
