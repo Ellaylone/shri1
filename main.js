@@ -1,3 +1,15 @@
+function getData(url, callback) {
+    var req = new XMLHttpRequest();
+    req.overrideMimeType("application/json");
+    req.open("GET", url, true);
+    req.onreadystatechange = function() {
+        if (req.readyState === 4 && req.status == "200") {
+            callback(req.responseText);
+        }
+    }
+    req.send(null);
+}
+
 var Modal = function(elem, confirm, toggle){
     this.elem = elem;
     this.overlay = document.getElementById("overlay");
