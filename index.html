@@ -17,7 +17,7 @@
                             </div>
                         </div>
                         <div class="tvguide-controls__side right">
-                            <div class="tvguide-controls__channelselect button__default">
+                            <div class="tvguide-controls__channelselect button__default" id="channelSelect">
                                 Выбрать другие каналы
                             </div>
                         </div>
@@ -70,7 +70,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal hidden">
+        <div class="modal hidden" id="channellistModal">
             <div class="modal__close">
                 <svg width="25px" height="25px">
                     <path fill="transparent" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M 8,8 L 17,17 M 17,8 L 8,17"/>
@@ -89,7 +89,7 @@
                 Применить настройки
             </div>
         </div>
-        <div class="overlay hidden">
-        </div>
+        <div class="overlay hidden" id="overlay"></div>
+        <script type="text/javascript" src="main.js"></script>
     </body>
 </html>
