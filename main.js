@@ -1,3 +1,8 @@
+const DATALIST = {
+    channels: "channels.json",
+    tvguide: "tvguide.json"
+};
+
 function getData(url, callback) {
     var req = new XMLHttpRequest();
     req.overrideMimeType("application/json");
@@ -40,6 +45,32 @@ Modal.prototype.hide = function(){
     this.elem.classList.add("hidden");
     return this;
 }
+
+function formChannels(data){
+    data = JSON.parse(data);
+    console.log(data);
+    var elems = document.getElementsByClassName("tvguide__channels");
+    if(elems.length > 0){
+        elems.forEach(function(elem){
+
+        });
+    }
+}
+
+function formTvGuide(data){
+    data = JSON.parse(data);
+    console.log(data);
+    var elems = document.getElementsByClassName("tvguide__guide");
+    if(elems.length > 0){
+        elems.forEach(function(elem){
+
+        });
+    }
+}
+
+getData(DATALIST.channels, formChannels);
+getData(DATALIST.tvguide, formTvGuide);
+
 var modalList = [];
 var channelList = new Modal(
     document.getElementById("channellistModal"),
