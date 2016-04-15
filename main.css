@@ -12,8 +12,16 @@ body {
     position: relative;
 }
 
-.tvguide-controls__right {
+.right {
     float: right;
+}
+
+.tvguide-controls {
+    margin: 20px 0;
+}
+
+.tvguide-controls__side {
+    display: inline-block;
 }
 
 .tvguide-controls__channelselect {
@@ -22,10 +30,15 @@ body {
     color: white;
     padding: 12px 20px;
     font-size: 12px;
+    cursor: pointer;
 }
 
 .tvguide-controls__channelselect:hover {
     background-color: #c93d3d;
+}
+
+.tvguide-filters{
+    margin-top: 20px;
 }
 
 .tvguide-filters__genre {
