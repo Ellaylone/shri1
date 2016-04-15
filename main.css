@@ -16,6 +16,15 @@ body {
     float: right;
 }
 
+.button__default {
+    display: block;
+    background-color: #f7636a;
+    color: white;
+    padding: 12px 20px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
 .tvguide-controls {
     margin: 20px 0;
 }
@@ -24,14 +33,6 @@ body {
     display: inline-block;
 }
 
-.tvguide-controls__channelselect {
-    display: block;
-    background-color: #f7636a;
-    color: white;
-    padding: 12px 20px;
-    font-size: 12px;
-    cursor: pointer;
-}
 
 .tvguide-controls__channelselect:hover {
     background-color: #c93d3d;
@@ -101,4 +102,45 @@ body {
     background: url(images/channels.png) no-repeat;
     border-right: 1px solid #eee;
     border-bottom: 1px solid #eee;
+}
+
+.channellist {
+    border-top: 1px solid #e4e4e4;
+    border-bottom: 1px solid #e4e4e4;
+    margin: 20px 0;
+    padding: 20px 0;
+}
+
+.modal {
+    background: #fff;
+    position: relative;
+    margin: 0 auto;
+    padding: 35px;
+    max-width: 1000px;
+    z-index: 2;
+}
+
+.modal__close {
+    position:absolute;
+    top: 10px;
+    right: 25px;
+    cursor: pointer;
+}
+
+.modal__confirm {
+    display: inline-block;
+}
+
+.overlay {
+    background-color: rgba(0,0,0,.35);
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.hidden {
+    display: none;
 }

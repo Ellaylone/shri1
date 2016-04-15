@@ -17,7 +17,7 @@
                             </div>
                         </div>
                         <div class="tvguide-controls__side right">
-                            <div class="tvguide-controls__channelselect">
+                            <div class="tvguide-controls__channelselect button__default">
                                 Выбрать другие каналы
                             </div>
                         </div>
@@ -47,7 +47,7 @@
                     <div class="swiper">
                         <div class="swiper__arrow swiper__arrow__left">
                             <svg width="25px" height="25px">
-                                <polyline fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="17,20,7,12.5,17,5"/>
+                                <path fill="transparent" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M 17,20 L 7,12.5 M 17,5 L 7,12.5"/>
                             </svg>
                         </div>
                         <div class="swiper__scrollbar">
@@ -55,7 +55,7 @@
                         </div>
                         <div class="swiper__arrow swiper__arrow__right">
                             <svg width="25px" height="25px">
-                                <polyline fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="8,20,18,12.5,8,5"/>
+                                <path fill="transparent" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M 8,20 L 18,12.5 M 8,5 L 18,12.5"/>
                             </svg>
                         </div>
                     </div>
@@ -69,6 +69,27 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="modal hidden">
+            <div class="modal__close">
+                <svg width="25px" height="25px">
+                    <path fill="transparent" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M 8,8 L 17,17 M 17,8 L 8,17"/>
+                </svg>
+            </div>
+            <h2>Список каналов</h2>
+            <div class="channellist">
+                <div class="cnannellist__channel">
+                    <input type="checkbox" value="first" id="first">
+                    <label for="first" class="js-channels-first">
+                        <span class="needsclick">Первый</span>
+                    </label>
+                </div>
+            </div>
+            <div class="modal__confirm button__default">
+                Применить настройки
+            </div>
+        </div>
+        <div class="overlay hidden">
         </div>
     </body>
 </html>
