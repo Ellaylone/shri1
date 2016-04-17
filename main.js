@@ -113,7 +113,7 @@ function formTvGuide(data){
 var showCount = 0;
 function showTvGuide(){
     showCount++;
-    if(showCount >= 3){
+    if(showCount >= 2){
         document.getElementsByClassName("spinner")[0].classList.add("hidden");
         document.getElementsByClassName("tvguide-wrapper")[0].classList.remove("hidden");
     }
@@ -143,8 +143,11 @@ function formTimeLine(){
     var now = new Date().getTime();
     var day = 1000 * 60 * 60 * 24;
     var timeline = document.getElementsByClassName("timeline")[0];
+    var dateControlWrap = document.getElementsByClassName("datecontrol")[0];
+    var dayNames = ["вс", "пн", "вт", "ср", "чт", "пт", "сб"];
     for(var i = -1; i < 6; i++){
-        var guideDay = new Date(now + (i * day)).getDate();
+        var tempDate = new Date(now + (i * day));
+        var guideDay = tempDate.getDate();
         for(var j = 0; j < 24; j++){
             var timeline_hour = document.createElement("li");
             timeline_hour.classList.add("timeline__hour");
@@ -156,7 +159,22 @@ function formTimeLine(){
             timeline_hour.appendChild(timeline_textnode);
             timeline.appendChild(timeline_hour);
         }
-        //TODO tvguide-controls__datetime
+        var dateControl = document.createElement("div");
+        dateControl.classList.add("datecontrol__day");
+
+        var dateControlDay = document.createElement("span");
+        dateControlDay.classList.add("datecontrol__day__day");
+        var dateControlDayText = document.createTextNode(dayNames[tempDate.getDay()]);
+        dateControlDay.appendChild(dateControlDayText);
+
+        var dateControlNum = document.createElement("span");
+        dateControlNum.classList.add("datecontrol__day__number");
+        var dateControlNumText = document.createTextNode(guideDay);
+        dateControlNum.appendChild(dateControlNumText);
+
+        dateControl.appendChild(dateControlDay);
+        dateControl.appendChild(dateControlNum);
+        dateControlWrap.appendChild(dateControl);
     }
     showTvGuide();
 }
