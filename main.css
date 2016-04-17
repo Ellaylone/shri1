@@ -126,6 +126,8 @@ body {
     padding-left: 9px;
     font-size: 16px;
     line-height: 50px;
+    float:left;
+    width: 4.166666666666667%
 }
 
 .channellist {
