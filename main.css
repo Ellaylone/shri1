@@ -117,6 +117,18 @@ body {
     border-bottom: 1px solid #eee;
 }
 
+.timemarker {
+    width: 1px;
+    background-color: #f7636a;
+    position: absolute;
+    top: 33px;
+    bottom: 0px;
+}
+
+.timemarker__marker {
+    margin-left: -6px;
+}
+
 .timeline {
     background-color: #e5e4e4;
     height: 50px;
