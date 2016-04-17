@@ -161,6 +161,7 @@ function formTimeLine(){
         }
         var dateControl = document.createElement("div");
         dateControl.classList.add("datecontrol__day");
+        if(i == 0) dateControl.classList.add("datecontrol__day__current");
 
         var dateControlDay = document.createElement("span");
         dateControlDay.classList.add("datecontrol__day__day");

@@ -1,3 +1,9 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
 body {
     background-color: #ededed;
 }
@@ -40,6 +46,35 @@ body {
     display: inline-block;
 }
 
+.datecontrol__day {
+    display: inline-block;
+    margin-right: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.datecontrol__day__day {
+    font: 12px;
+    display: block;
+}
+
+.datecontrol__day__number {
+    font-size: 11px;
+    line-height: 12px;
+    display: block;
+    color: #000;
+    background-color: #fff;
+    padding: 6px;
+    border-radius: 50%;
+    margin-top: 2px;
+    width: 24px;
+    height: 24px;
+}
+
+.datecontrol__day__current .datecontrol__day__number {
+    background-color: #4090d8;
+    color: #fff;    
+}
 
 .tvguide-controls__channelselect:hover {
     background-color: #c93d3d;
@@ -86,7 +121,6 @@ body {
     right: 30px;
     cursor: pointer;
     background-color: #ededed;
-    box-sizing: border-box;
 }
 
 .swiper__scrollbar__drag {
@@ -95,12 +129,9 @@ body {
     width: 100%;
     border: 3px solid #ededed;
     position: relative;
-    box-sizing: border-box;
 }
 
 .tvguide__channels {
-    padding: 0px;
-    margin: 0px;
     width: 70px;
     display: block;
     list-style-type: none;
@@ -134,7 +165,6 @@ body {
     height: 50px;
     width: 100%;
     list-style: none;
-    padding: 0px;
     overflow: hidden;
 }
 
