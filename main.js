@@ -53,18 +53,23 @@ function formChannels(data){
     if(elems.length > 0 && data.channels.length > 0){
         var channelElems = [];
         data.channels.forEach(function(channel){
-            var channelElem = document.createElement("li");
-            channelElem.classList.add("tvguide__channels__channel");
-            channelElem.setAttribute("style", "background-position: " + channel.imagePosition[0] + "px " + channel.imagePosition[1] + "px");
-            channelElems.push(channelElem);
+            if(channel.default){
+                var channelElem = document.createElement("li");
+                channelElem.classList.add("tvguide__channels__channel");
+                channelElem.setAttribute("style", "background-position: " + channel.imagePosition[0] + "px " + channel.imagePosition[1] + "px");
+                channelElems.push(channelElem);
+            }
         });
         for(var i = 0; i < elems.length; i++){
-            channelElems.forEach(function(channel){
-                elems[i].appendChild(channel);
-            });
+            if(channelElems.length > 0){
+                channelElems.forEach(function(channel){
+                    elems[i].appendChild(channel);
+                });
+            }
         }
         channelElems = [];
         if(channellist !== null){
+            channellist = channellist.getElementsByClassName("channellist")[0];
             data.channels.forEach(function(channel){
                 var channelElem = document.createElement("div");
                 channelElem.classList.add("channellist__channel");
