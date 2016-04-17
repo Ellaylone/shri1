@@ -95,6 +95,7 @@ function formChannels(data){
             });
         }
     }
+    showTvGuide();
 }
 
 function formTvGuide(data){
@@ -106,10 +107,21 @@ function formTvGuide(data){
 
         });
     }
+    showTvGuide();
+}
+
+var showCount = 0;
+function showTvGuide(){
+    showCount++;
+    if(showCount >= 3){
+        document.getElementsByClassName("spinner")[0].classList.add("hidden");
+        document.getElementsByClassName("tvguide-wrapper")[0].classList.remove("hidden");
+    }
 }
 
 getData(DATALIST.channels, formChannels);
 getData(DATALIST.tvguide, formTvGuide);
+formTimeLine();
 
 var modalList = [];
 var channelList = new Modal(
@@ -126,3 +138,25 @@ document.getElementById("overlay").addEventListener("click", function(){
         modal.hide();
     });
 }, false);
+
+function formTimeLine(){
+    var now = new Date().getTime();
+    var day = 1000 * 60 * 60 * 24;
+    var timeline = document.getElementsByClassName("timeline")[0];
+    for(var i = -1; i < 6; i++){
+        var guideDay = new Date(now + (i * day)).getDate();
+        for(var j = 0; j < 24; j++){
+            var timeline_hour = document.createElement("li");
+            timeline_hour.classList.add("timeline__hour");
+            timeline_hour.dataset.day = guideDay;
+            timeline_hour.dataset.time = j;
+
+            var timeline_textnode = document.createTextNode(j + ":00");
+
+            timeline_hour.appendChild(timeline_textnode);
+            timeline.appendChild(timeline_hour);
+        }
+        //TODO tvguide-controls__datetime
+    }
+    showTvGuide();
+}

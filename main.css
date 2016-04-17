@@ -12,6 +12,13 @@ body {
     position: relative;
 }
 
+.spinner {
+    background: url('images/spinner.svg') no-repeat;
+    background-size: 70px 70px;
+    width: 70px;
+    height: 70px;
+}
+
 .right {
     float: right;
 }
@@ -104,11 +111,36 @@ body {
     border-bottom: 1px solid #eee;
 }
 
+.timeline {
+    background-color: #e5e4e4;
+    height: 50px;
+    width: 100%;
+    list-style: none;
+    padding: 0px;
+}
+
+.timeline__hour {
+    display: block;
+    border-left: 1px solid #d8d8d8;
+    height: 50px;
+    padding-left: 9px;
+    font-size: 16px;
+    line-height: 50px;
+    float:left;
+    width: 4.166666666666667%
+}
+
 .channellist {
     border-top: 1px solid #e4e4e4;
     border-bottom: 1px solid #e4e4e4;
     margin: 20px 0;
     padding: 20px 0;
+}
+
+.channellist__channel {
+    width: 20%;
+    display: inline-block;
+    padding: 5px 0;
 }
 
 .modal {
