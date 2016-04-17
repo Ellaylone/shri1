@@ -49,6 +49,7 @@ Modal.prototype.hide = function(){
 function formChannels(data){
     data = JSON.parse(data);
     var elems = document.getElementsByClassName("tvguide__channels");
+    var channellist = document.getElementById("channellistModal");
     if(elems.length > 0 && data.channels.length > 0){
         var channelElems = [];
         data.channels.forEach(function(channel){
@@ -57,11 +58,37 @@ function formChannels(data){
             channelElem.setAttribute("style", "background-position: " + channel.imagePosition[0] + "px " + channel.imagePosition[1] + "px");
             channelElems.push(channelElem);
         });
-        elems.forEach(function(elem){
+        for(var i = 0; i < elems.length; i++){
             channelElems.forEach(function(channel){
-                elem.appendChild(channel);
+                elems[i].appendChild(channel);
             });
-        });
+        }
+        channelElems = [];
+        if(channellist !== null){
+            data.channels.forEach(function(channel){
+                var channelElem = document.createElement("div");
+                channelElem.classList.add("channellist__channel");
+
+                var channelInput = document.createElement("input");
+                channelInput.type = "checkbox";
+                channelInput.value = channel.id;
+                channelInput.id = "channel" + channel.id;
+
+                var channelLabel = document.createElement("label");
+                channelLabel.setAttribute("for", "channel" + channel.id);
+                channelLabel.classList.add("needsclick");
+
+                var channelLabelText = document.createTextNode(channel.name);
+
+                channelLabel.appendChild(channelLabelText);
+                channelElem.appendChild(channelInput);
+                channelElem.appendChild(channelLabel);
+                channelElems.push(channelElem);
+            });
+            channelElems.forEach(function(channel){
+                channellist.appendChild(channel);
+            });
+        }
     }
 }
 
