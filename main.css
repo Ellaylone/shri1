@@ -53,6 +53,10 @@ body {
     display: inline-block;
 }
 
+.tvguide {
+    position:relative;
+}
+
 .swiper {
     height: 25px;
 }
@@ -96,11 +100,13 @@ body {
 
 .tvguide__channels {
     padding: 0px;
+    margin: 0px;
     width: 70px;
     display: block;
     list-style-type: none;
     background-color: white;
     position: absolute;
+    top: 50px;
 }
 
 .tvguide__channels__channel {
@@ -117,6 +123,7 @@ body {
     width: 100%;
     list-style: none;
     padding: 0px;
+    overflow: hidden;
 }
 
 .timeline__hour {
