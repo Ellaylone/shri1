@@ -12,6 +12,13 @@ body {
     position: relative;
 }
 
+.spinner {
+    background: url('images/spinner.svg') no-repeat;
+    background-size: 70px 70px;
+    width: 70px;
+    height: 70px;
+}
+
 .right {
     float: right;
 }
@@ -109,6 +116,12 @@ body {
     border-bottom: 1px solid #e4e4e4;
     margin: 20px 0;
     padding: 20px 0;
+}
+
+.channellist__channel {
+    width: 20%;
+    display: inline-block;
+    padding: 5px 0;
 }
 
 .modal {

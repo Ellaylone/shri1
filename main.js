@@ -95,6 +95,7 @@ function formChannels(data){
             });
         }
     }
+    showTvGuide();
 }
 
 function formTvGuide(data){
@@ -105,6 +106,16 @@ function formTvGuide(data){
         elems.forEach(function(elem){
 
         });
+    }
+    showTvGuide();
+}
+
+var showCount = 0;
+function showTvGuide(){
+    showCount++;
+    if(showCount >= 2){
+        document.getElementsByClassName("spinner")[0].classList.add("hidden");
+        document.getElementsByClassName("tvguide-wrapper")[0].classList.remove("hidden");
     }
 }
 
