@@ -2,6 +2,7 @@ const DATALIST = {
     channels: "channels.json",
     tvguide: "tvguide.json"
 };
+var channelsData, tvguideData;
 
 function createCookie(name, value, days) {
     var expires;
@@ -81,6 +82,11 @@ Modal.prototype.hide = function(){
 }
 
 function formChannels(data){
+    if(typeof data != "undefined") {
+        channelsData = data;
+    } else {
+        data = channelsData;
+    }
     data = JSON.parse(data);
     var elems = document.getElementsByClassName("tvguide__channels");
     var channellist = document.getElementById("channellistModal");
@@ -141,6 +147,11 @@ function formChannels(data){
 }
 
 function formTvGuide(data){
+    if(typeof data != "undefined") {
+        tvguideData = data;
+    } else {
+        data = tvguideData;
+    }
     data = JSON.parse(data);
     console.log(data);
     var elems = document.getElementsByClassName("tvguide__guide");
