@@ -54,7 +54,13 @@ var Modal = function(elem, confirm, toggle){
     );
     this.elem.getElementsByClassName("modal__confirm")[0].addEventListener(
         "click",
-        function(){ if(confirm(that.elem.getElementsByClassName("channellist__channel_input"))){ that.hide(); } },
+        function(){
+            if(confirm(that.elem.getElementsByClassName("channellist__channel_input"))){
+                formChannels();
+                formTvGuide();
+                that.hide();
+            }
+        },
         false
     );
     if(typeof toggle !== 'undefined'){
@@ -167,7 +173,7 @@ var channelList = new Modal(
         if(checkboxes.length > 0){
             for(var i = 0; i < checkboxes.length; i++){
                 if(checkboxes[i].checked){
-                    checkedChannels.push(checkboxes.value);
+                    checkedChannels.push(checkboxes[i].value);
                 }
             }
             createCookie("tv_channels", checkedChannels.join(","), 10);
