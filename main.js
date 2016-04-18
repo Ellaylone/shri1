@@ -95,7 +95,7 @@ function formChannels(data){
     if(elems.length > 0 && data.channels.length > 0){
         var channelElems = [];
         data.channels.forEach(function(channel){
-            if((channelsCookie.length == 0 && channel.default) || (channelsCookie.length > 0 && channelsCookie.indexOf(channel.id.toString))){
+            if((channelsCookie.length == 0 && channel.default) || (channelsCookie.length > 0 && channelsCookie.indexOf(channel.id.toString) >= 0)){
                 var channelElem = document.createElement("li");
                 channelElem.classList.add("tvguide__channels__channel");
                 channelElem.setAttribute("style", "background-position: " + channel.imagePosition[0] + "px " + channel.imagePosition[1] + "px");
@@ -121,7 +121,7 @@ function formChannels(data){
                 channelInput.type = "checkbox";
                 channelInput.value = channel.id;
                 channelInput.id = "channel" + channel.id;
-                if((channelsCookie.length == 0 && channel.default) || (channelsCookie.length > 0 && channelsCookie.indexOf(channel.id.toString))){
+                if((channelsCookie.length == 0 && channel.default) || (channelsCookie.length > 0 && channelsCookie.indexOf(channel.id.toString) >= 0)){
                     channelInput.setAttribute("checked", "checked");
                 }
 
