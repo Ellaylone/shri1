@@ -3,6 +3,34 @@ const DATALIST = {
     tvguide: "tvguide.json"
 };
 
+function createCookie(name, value, days) {
+    var expires;
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toGMTString();
+    }
+    else {
+        expires = "";
+    }
+    document.cookie = name + "=" + value + expires + "; path=/";
+}
+
+function getCookie(c_name) {
+    if (document.cookie.length > 0) {
+        c_start = document.cookie.indexOf(c_name + "=");
+        if (c_start != -1) {
+            c_start = c_start + c_name.length + 1;
+            c_end = document.cookie.indexOf(";", c_start);
+            if (c_end == -1) {
+                c_end = document.cookie.length;
+            }
+            return unescape(document.cookie.substring(c_start, c_end));
+        }
+    }
+    return "";
+}
+
 function getData(url, callback) {
     var req = new XMLHttpRequest();
     req.overrideMimeType("application/json");
@@ -26,7 +54,7 @@ var Modal = function(elem, confirm, toggle){
     );
     this.elem.getElementsByClassName("modal__confirm")[0].addEventListener(
         "click",
-        function(){ if(confirm()){ that.hide(); } },
+        function(){ if(confirm(that.elem.getElementsByClassName("channellist__channel_input"))){ that.hide(); } },
         false
     );
     if(typeof toggle !== 'undefined'){
@@ -50,10 +78,14 @@ function formChannels(data){
     data = JSON.parse(data);
     var elems = document.getElementsByClassName("tvguide__channels");
     var channellist = document.getElementById("channellistModal");
+    var channelsCookie = getCookie("tv_channels");
+    if(channelsCookie.length > 0){
+        channelsCookie.split(",");
+    }
     if(elems.length > 0 && data.channels.length > 0){
         var channelElems = [];
         data.channels.forEach(function(channel){
-            if(channel.default){
+            if((channelsCookie.length == 0 && channel.default) || (channelsCookie.length > 0 && channelsCookie.indexOf(channel.id.toString))){
                 var channelElem = document.createElement("li");
                 channelElem.classList.add("tvguide__channels__channel");
                 channelElem.setAttribute("style", "background-position: " + channel.imagePosition[0] + "px " + channel.imagePosition[1] + "px");
@@ -75,9 +107,13 @@ function formChannels(data){
                 channelElem.classList.add("channellist__channel");
 
                 var channelInput = document.createElement("input");
+                channelInput.classList.add("channellist__channel_input");
                 channelInput.type = "checkbox";
                 channelInput.value = channel.id;
                 channelInput.id = "channel" + channel.id;
+                if((channelsCookie.length == 0 && channel.default) || (channelsCookie.length > 0 && channelsCookie.indexOf(channel.id.toString))){
+                    channelInput.setAttribute("checked", "checked");
+                }
 
                 var channelLabel = document.createElement("label");
                 channelLabel.setAttribute("for", "channel" + channel.id);
@@ -104,7 +140,7 @@ function formTvGuide(data){
     var elems = document.getElementsByClassName("tvguide__guide");
     if(elems.length > 0){
         elems.forEach(function(elem){
-
+            //TODO
         });
     }
     showTvGuide();
@@ -126,8 +162,16 @@ formTimeLine();
 var modalList = [];
 var channelList = new Modal(
     document.getElementById("channellistModal"),
-    function(){
-        //TODO channel confirm
+    function(checkboxes){
+        var checkedChannels = [];
+        if(checkboxes.length > 0){
+            for(var i = 0; i < checkboxes.length; i++){
+                if(checkboxes[i].checked){
+                    checkedChannels.push(checkboxes.value);
+                }
+            }
+            createCookie("tv_channels", checkedChannels.join(","), 10);
+        }
         return true;
     },
     document.getElementById("channelSelect")
