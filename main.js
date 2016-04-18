@@ -79,10 +79,13 @@ function formChannels(data){
     var elems = document.getElementsByClassName("tvguide__channels");
     var channellist = document.getElementById("channellistModal");
     var channelsCookie = getCookie("tv_channels");
+    if(channelsCookie.length > 0){
+        channelsCookie.split(",");
+    }
     if(elems.length > 0 && data.channels.length > 0){
         var channelElems = [];
         data.channels.forEach(function(channel){
-            if(channelsCookie.length == 0 && channel.default){
+            if((channelsCookie.length == 0 && channel.default) || (channelsCookie.length > 0 && channelsCookie.indexOf(channel.id.toString))){
                 var channelElem = document.createElement("li");
                 channelElem.classList.add("tvguide__channels__channel");
                 channelElem.setAttribute("style", "background-position: " + channel.imagePosition[0] + "px " + channel.imagePosition[1] + "px");
@@ -108,7 +111,7 @@ function formChannels(data){
                 channelInput.type = "checkbox";
                 channelInput.value = channel.id;
                 channelInput.id = "channel" + channel.id;
-                if(channelsCookie.length == 0 && channel.default){
+                if((channelsCookie.length == 0 && channel.default) || (channelsCookie.length > 0 && channelsCookie.indexOf(channel.id.toString))){
                     channelInput.setAttribute("checked", "checked");
                 }
 
