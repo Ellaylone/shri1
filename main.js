@@ -57,9 +57,11 @@ var Modal = function(elem, confirm, toggle){
         "click",
         function(){
             if(confirm(that.elem.getElementsByClassName("channellist__channel_input"))){
-                formChannels();
-                formTvGuide();
                 that.hide();
+                hideTvGuide();
+                clearAll();
+                formChannels(channelsData);
+                formTvGuide(tvguideData);
             }
         },
         false
@@ -82,11 +84,7 @@ Modal.prototype.hide = function(){
 }
 
 function formChannels(data){
-    if(typeof data != "undefined") {
-        channelsData = data;
-    } else {
-        data = channelsData;
-    }
+    channelsData = data;
     data = JSON.parse(data);
     var elems = document.getElementsByClassName("tvguide__channels");
     var channellist = document.getElementById("channellistModal");
@@ -147,11 +145,7 @@ function formChannels(data){
 }
 
 function formTvGuide(data){
-    if(typeof data != "undefined") {
-        tvguideData = data;
-    } else {
-        data = tvguideData;
-    }
+    tvguideData = data;
     data = JSON.parse(data);
     console.log(data);
     var elems = document.getElementsByClassName("tvguide__guide");
@@ -163,6 +157,20 @@ function formTvGuide(data){
     showTvGuide();
 }
 
+function clearAll(){
+    clearTvGuide();
+    clearChannels();
+}
+
+function clearTvGuide(){
+    document.getElementsByClassName("tvguide__guide")[0].innerHTML = "";
+}
+
+function clearChannels(){
+    document.getElementsByClassName("tvguide__channels")[0].innerHTML = "";
+    document.getElementById("channellistModal").getElementsByClassName("channellist")[0].innerHTML = "";
+}
+
 var showCount = 0;
 function showTvGuide(){
     showCount++;
@@ -170,6 +178,12 @@ function showTvGuide(){
         document.getElementsByClassName("spinner")[0].classList.add("hidden");
         document.getElementsByClassName("tvguide-wrapper")[0].classList.remove("hidden");
     }
+}
+
+function hideTvGuide(){
+    showCount = 0;
+    document.getElementsByClassName("spinner")[0].classList.remove("hidden");
+    document.getElementsByClassName("tvguide-wrapper")[0].classList.add("hidden");
 }
 
 getData(DATALIST.channels, formChannels);
