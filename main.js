@@ -2,6 +2,9 @@ const DATALIST = {
     channels: "channels.json",
     tvguide: "tvguide.json"
 };
+const widthChange = 767,
+      smallHourWidth = 100,
+      bigHourWidth = 300;
 var channelsData, tvguideData;
 
 function createCookie(name, value, days) {
@@ -44,18 +47,60 @@ function getData(url, callback) {
     req.send(null);
 }
 
+function throttle(callback, delay) {
+    var timer = null;
+    return function () {
+        var context = this, args = arguments;
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+            callback.apply(context, args);
+        }, delay);
+    };
+}
+
+function onWindowResize(e){
+    if(window.innerWidth < widthChange){
+        tvguideSwiper.hourWidth = smallHourWidth;
+    } else {
+        tvguideSwiper.hourWidth = bigHourWidth;
+    }
+    tvguideSwiper.init();
+}
+window.addEventListener("resize", throttle(onWindowResize, 100));
+
 var Swiper = function(wrapper){
     this.wrapper = wrapper;
     this.swiper__drag = this.wrapper.getElementsByClassName("swiper__scrollbar__drag")[0];
     this.swiper__arrows = this.wrapper.getElementsByClassName("swiper__arrow");
     this.timeline = this.wrapper.getElementsByClassName("timeline")[0];
-    this.hourWidth = 300;
+    this.hours = this.wrapper.getElementsByClassName("timeline__hour");
+    this.timemarker = this.wrapper.getElementsByClassName("timemarker")[0];
+    this.hourWidth = bigHourWidth;
+    this.markerOffset;
 }
 
 Swiper.prototype.init = function(){
-    this.hours = this.wrapper.getElementsByClassName("timeline__hour");
-    this.timeline.setAttribute("style", "width: " + this.hours.length * 300 + "px");
+    this.timeline.setAttribute("style", "width: " + this.hours.length * this.hourWidth + "px");
     this.swiper__drag.setAttribute("style", "width: " + 100 / this.hours.length + "%;")
+    this.markerTimeout.apply(this);
+}
+
+Swiper.prototype.markerTimeout = function(){
+    this.setMarkerPosition(new Date());
+    setTimeout(this.markerTimeout.bind(this), 60 * 1000);
+}
+
+Swiper.prototype.setMarkerPosition = function(date){
+    for(var i = 0; i < this.hours.length; i++){
+        if(this.hours[i].dataset.day == date.getDate() && this.hours[i].dataset.time == date.getHours()){
+            this.markerOffset = i * this.hourWidth + (this.hourWidth / 60) * date.getMinutes();
+            this.timemarker.setAttribute(
+                "style",
+                "transform: translate3d(" + this.markerOffset + "px, 0px, 0px)"
+            );
+            break;
+        }
+    }
 }
 
 var Modal = function(elem, confirm, toggle){
