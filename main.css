@@ -90,6 +90,7 @@ body {
 
 .tvguide {
     position:relative;
+    overflow: hidden;
 }
 
 .swiper {
@@ -129,10 +130,6 @@ body {
     width: 100%;
     border: 3px solid #ededed;
     position: relative;
-}
-
-.tvguide__guide {
-    overflow: hidden;
 }
 
 .tvguide__channels {
