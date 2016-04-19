@@ -263,5 +263,8 @@ function formTimeLine(){
         dateControl.appendChild(dateControlNum);
         dateControlWrap.appendChild(dateControl);
     }
+    //FIXME hardcode
+    document.getElementsByClassName("timeline")[0].setAttribute("style", "width: " + (i + 1) * j * 300 + "px");
+    document.getElementsByClassName("swiper__scrollbar__drag")[0].setAttribute("style", "width: " + 100 / ((i + 1) * j) + "%;")
     showTvGuide();
 }
