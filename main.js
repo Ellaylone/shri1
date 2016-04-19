@@ -81,7 +81,9 @@ var Swiper = function(wrapper){
 
 Swiper.prototype.init = function(){
     this.timeline.setAttribute("style", "width: " + this.hours.length * this.hourWidth + "px");
-    this.swiper__drag.setAttribute("style", "width: " + 100 / this.hours.length + "%;")
+    var dragWidth = 100 / this.hours.length;
+    if(dragWidth < 30) dragWidth = 3;
+    this.swiper__drag.setAttribute("style", "width: " + dragWidth + "%;")
     this.markerTimeout.apply(this);
 }
 
@@ -327,3 +329,107 @@ function formTimeLine(){
     tvguideSwiper.init();
     showTvGuide();
 }
+
+
+function mouseX (e) {
+    if (e.pageX) {
+        return e.pageX;
+    }
+    if (e.clientX) {
+        return e.clientX + (document.documentElement.scrollLeft ?
+                            document.documentElement.scrollLeft :
+                            document.body.scrollLeft);
+    }
+    return null;
+}
+
+function mouseY (e) {
+    if (e.pageY) {
+        return e.pageY;
+    }
+    if (e.clientY) {
+        return e.clientY + (document.documentElement.scrollTop ?
+                            document.documentElement.scrollTop :
+                            document.body.scrollTop);
+    }
+    return null;
+}
+
+function draggable (clickable, draggable) {
+    var drag = false;
+    offsetX = 0;
+    offsetY = 0;
+    var mousemoveTemp = null;
+
+    if (draggable.length > 0) {
+        var clickableWrap = clickable.parentNode;
+        var draggableWrap = draggable[0].parentNode;
+
+        var move = function (x,y) {
+            var clickableLimits = [0, clickableWrap.offsetWidth - (clickable.offsetWidth + 2)];
+            var draggablePxPercent = (draggable[0].offsetWidth - draggableWrap.offsetWidth) / 100;
+            var clickablePxPercent = (clickableLimits[1]/100);
+            var draggableMultiply = draggablePxPercent / clickablePxPercent;
+            clickable.dataset.offset = parseInt(clickable.dataset.offset) + x;
+
+            if(clickable.dataset.offset < clickableLimits[0]){
+                clickable.dataset.offset = clickableLimits[0];
+            } else if(clickable.dataset.offset > clickableLimits[1]){
+                clickable.dataset.offset = clickableLimits[1];
+            }
+
+            clickable.style.transform = "translate3d(" + clickable.dataset.offset + "px, 0px, 0px)";
+
+            for(var i = 0; i < draggable.length; i++){
+                var xTranslate = -1 * clickable.dataset.offset * draggableMultiply;
+                draggable[i].style.transform = "translate3d(" + xTranslate + "px, 0px, 0px)";
+            }
+        }
+        var mouseMoveHandler = function (e) {
+            e = e || window.event;
+
+            if(!drag){return true};
+
+            var x = mouseX(e);
+            var y = mouseY(e);
+            if (x != offsetX || y != offsetY) {
+                move(x-offsetX,y-offsetY);
+                offsetX = x;
+                offsetY = y;
+            }
+            return false;
+        }
+        var start_drag = function (e) {
+            e = e || window.event;
+
+            offsetX=mouseX(e);
+            offsetY=mouseY(e);
+            drag=true;
+
+            if (document.body.onmousemove) {
+                mousemoveTemp = document.body.onmousemove;
+            }
+            document.body.onmousemove = mouseMoveHandler;
+            return false;
+        }
+        var stop_drag = function () {
+            drag=false;
+
+            if (mousemoveTemp) {
+                document.body.onmousemove = mousemoveTemp;
+                mousemoveTemp = null;
+            }
+            return false;
+        }
+        clickable.onmousedown = start_drag;
+        window.onmouseup = stop_drag;
+    }
+}
+
+draggable(
+    document.getElementsByClassName("swiper__scrollbar__drag")[0],
+    [
+        document.getElementsByClassName("timeline")[0]
+        //TODO add tvguide
+    ]
+);
