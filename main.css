@@ -228,3 +228,14 @@ body {
 .hidden {
     display: none;
 }
+
+@media (max-width: 767px){
+    .timeline__hour {
+        height: 25px;
+        width: 100px;
+        line-height: 25px;
+    }
+    .timeline {
+        height: 25px;
+    }
+}
