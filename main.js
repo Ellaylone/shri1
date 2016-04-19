@@ -44,6 +44,20 @@ function getData(url, callback) {
     req.send(null);
 }
 
+var Swiper = function(wrapper){
+    this.wrapper = wrapper;
+    this.swiper__drag = this.wrapper.getElementsByClassName("swiper__scrollbar__drag")[0];
+    this.swiper__arrows = this.wrapper.getElementsByClassName("swiper__arrow");
+    this.timeline = this.wrapper.getElementsByClassName("timeline")[0];
+    this.hourWidth = 300;
+}
+
+Swiper.prototype.init = function(){
+    this.hours = this.wrapper.getElementsByClassName("timeline__hour");
+    this.timeline.setAttribute("style", "width: " + this.hours.length * 300 + "px");
+    this.swiper__drag.setAttribute("style", "width: " + 100 / this.hours.length + "%;")
+}
+
 var Modal = function(elem, confirm, toggle){
     this.elem = elem;
     this.overlay = document.getElementById("overlay");
@@ -197,6 +211,8 @@ function hideTvGuide(){
     document.getElementsByClassName("tvguide-wrapper")[0].classList.add("hidden");
 }
 
+var tvguideSwiper = new Swiper(document.getElementsByClassName("tvguide-wrapper")[0]);
+
 getData(DATALIST.channels, formChannels);
 getData(DATALIST.tvguide, formTvGuide);
 formTimeLine();
@@ -263,5 +279,6 @@ function formTimeLine(){
         dateControl.appendChild(dateControlNum);
         dateControlWrap.appendChild(dateControl);
     }
+    tvguideSwiper.init();
     showTvGuide();
 }

@@ -131,6 +131,10 @@ body {
     position: relative;
 }
 
+.tvguide__guide {
+    overflow: hidden;
+}
+
 .tvguide__channels {
     width: 70px;
     display: block;
@@ -163,7 +167,6 @@ body {
 .timeline {
     background-color: #e5e4e4;
     height: 50px;
-    width: 100%;
     list-style: none;
     overflow: hidden;
 }
@@ -176,7 +179,7 @@ body {
     font-size: 16px;
     line-height: 50px;
     float:left;
-    width: 4.166666666666667%
+    width: 300px;
 }
 
 .channellist {
