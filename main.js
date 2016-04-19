@@ -92,7 +92,7 @@ function formChannels(data){
     if(channelsCookie.length > 0){
         channelsCookie.split(",");
     }
-    if(elems.length > 0 && data.channels.length > 0){
+    if(data.channels.length > 0){
         data.channels.forEach(function(channel){
             if((channelsCookie.length == 0 && channel.default) || (channelsCookie.length > 0 && channelsCookie.indexOf(channel.id.toString) >= 0)){
                 var channelElem = document.createElement("li");
