@@ -86,30 +86,21 @@ Modal.prototype.hide = function(){
 function formChannels(data){
     channelsData = data;
     data = JSON.parse(data);
-    var elems = document.getElementsByClassName("tvguide__channels");
+    var elem = document.getElementsByClassName("tvguide__channels")[0];
     var channellist = document.getElementById("channellistModal");
     var channelsCookie = getCookie("tv_channels");
     if(channelsCookie.length > 0){
         channelsCookie.split(",");
     }
     if(elems.length > 0 && data.channels.length > 0){
-        var channelElems = [];
         data.channels.forEach(function(channel){
             if((channelsCookie.length == 0 && channel.default) || (channelsCookie.length > 0 && channelsCookie.indexOf(channel.id.toString) >= 0)){
                 var channelElem = document.createElement("li");
                 channelElem.classList.add("tvguide__channels__channel");
                 channelElem.setAttribute("style", "background-position: " + channel.imagePosition[0] + "px " + channel.imagePosition[1] + "px");
-                channelElems.push(channelElem);
+                elem.appendChild(channelElem);
             }
         });
-        for(var i = 0; i < elems.length; i++){
-            if(channelElems.length > 0){
-                channelElems.forEach(function(channel){
-                    elems[i].appendChild(channel);
-                });
-            }
-        }
-        channelElems = [];
         if(channellist !== null){
             channellist = channellist.getElementsByClassName("channellist")[0];
             data.channels.forEach(function(channel){
@@ -134,10 +125,7 @@ function formChannels(data){
                 channelLabel.appendChild(channelLabelText);
                 channelElem.appendChild(channelInput);
                 channelElem.appendChild(channelLabel);
-                channelElems.push(channelElem);
-            });
-            channelElems.forEach(function(channel){
-                channellist.appendChild(channel);
+                channellist.appendChild(channelElem);
             });
         }
     }
@@ -148,22 +136,45 @@ function formTvGuide(data){
     tvguideData = data;
     data = JSON.parse(data);
     console.log(data);
-    var elems = document.getElementsByClassName("tvguide__guide");
-    if(elems.length > 0){
-        elems.forEach(function(elem){
-            //TODO
-        });
-    }
+    var elem = document.getElementsByClassName("tvguide__guide")[0];
+    var filterElem = document.getElementsByClassName("tvguide-filters")[0];
+
+    data.tvtype.forEach(function(type){
+        var genre = document.createElement("div");
+        genre.classList.add("tvguide-filters__genre");
+
+        var film = document.createElement("input");
+        film.type = "checkbox";
+        film.value = type.id;
+        film.id = "genre" + type.id;
+
+        var label = document.createElement("label");
+        label.setAttribute("for", "genre" + type.id);
+        label.classList.add("needsclick");
+
+        var labelText = document.createTextNode(type.name);
+
+        label.appendChild(labelText);
+        genre.appendChild(film);
+        genre.appendChild(label);
+        filterElem.appendChild(genre);
+    });
+
     showTvGuide();
 }
 
 function clearAll(){
     clearTvGuide();
     clearChannels();
+    clearFilters();
 }
 
 function clearTvGuide(){
     document.getElementsByClassName("tvguide__guide")[0].innerHTML = "";
+}
+
+function clearFilters(){
+    document.getElementsByClassName("tvguide-filters")[0].innerHTML = "";
 }
 
 function clearChannels(){
