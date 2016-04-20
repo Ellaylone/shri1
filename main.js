@@ -2,9 +2,11 @@ const DATALIST = {
     channels: "channels.json",
     tvguide: "tvguide.json"
 };
+const TVGUIDE_DAYS = 7;
 const widthChange = 767,
       smallHourWidth = 100,
-      bigHourWidth = 300;
+      bigHourWidth = 300,
+      currentHourWidth = 300;
 var channelsData, tvguideData;
 
 function createCookie(name, value, days) {
@@ -64,6 +66,7 @@ function onWindowResize(e){
     } else {
         tvguideSwiper.hourWidth = bigHourWidth;
     }
+    currentHourWidth = tvguideSwiper.hourWidth;
     tvguideSwiper.init();
 }
 window.addEventListener("resize", throttle(onWindowResize, 100));
@@ -75,12 +78,14 @@ var Swiper = function(wrapper){
     this.timeline = this.wrapper.getElementsByClassName("timeline")[0];
     this.hours = this.wrapper.getElementsByClassName("timeline__hour");
     this.timemarker = this.wrapper.getElementsByClassName("timemarker")[0];
+    this.guide = this.wrapper.getElementsByClassName("tvguide__guide")[0];
     this.hourWidth = bigHourWidth;
     this.markerOffset;
 }
 
 Swiper.prototype.init = function(){
     this.timeline.setAttribute("style", "width: " + this.hours.length * this.hourWidth + "px");
+    this.guide.setAttribute("style", "width: " + this.hours.length * this.hourWidth + "px");
     var dragWidth = 100 / this.hours.length;
     if(dragWidth < 30) dragWidth = 3;
     this.swiper__drag.setAttribute("style", "width: " + dragWidth + "%;")
@@ -100,6 +105,7 @@ Swiper.prototype.setMarkerPosition = function(date){
                 "style",
                 "transform: translate3d(" + this.markerOffset + "px, 0px, 0px)"
             );
+            // this.timemarker.dataset.offset = this.markerOffset; //NOTE
             break;
         }
     }
@@ -249,6 +255,11 @@ function showTvGuide(){
     if(showCount >= 2){
         document.getElementsByClassName("spinner")[0].classList.add("hidden");
         document.getElementsByClassName("tvguide-wrapper")[0].classList.remove("hidden");
+        draggable(
+            document.getElementsByClassName("swiper__scrollbar__drag")[0],
+            document.getElementsByClassName("tvguide__guide")[0],
+            document.getElementsByClassName("tvguide-controls")[0]
+        );
     }
 }
 
@@ -294,7 +305,7 @@ function formTimeLine(){
     var timeline = document.getElementsByClassName("timeline")[0];
     var dateControlWrap = document.getElementsByClassName("datecontrol")[0];
     var dayNames = ["вс", "пн", "вт", "ср", "чт", "пт", "сб"];
-    for(var i = -1; i < 6; i++){
+    for(var i = -1; i < (TVGUIDE_DAYS - 1); i++){
         var tempDate = new Date(now + (i * day));
         var guideDay = tempDate.getDate();
         for(var j = 0; j < 24; j++){
@@ -319,6 +330,7 @@ function formTimeLine(){
 
         var dateControlNum = document.createElement("span");
         dateControlNum.classList.add("datecontrol__day__number");
+        dateControlNum.dataset.day = i;
         var dateControlNumText = document.createTextNode(guideDay);
         dateControlNum.appendChild(dateControlNumText);
 
@@ -355,81 +367,144 @@ function mouseY (e) {
     return null;
 }
 
-function draggable (clickable, draggable) {
+function draggable (clickable, draggable, controls) {
     var drag = false;
-    offsetX = 0;
-    offsetY = 0;
+    var offsetX = 0;
     var mousemoveTemp = null;
+    var arrowPercent = 5;
+    var moveTimeout = null;
+    var moveDelay = 1000;
 
-    if (draggable.length > 0) {
-        var clickableWrap = clickable.parentNode;
-        var draggableWrap = draggable[0].parentNode;
+    var clickableWrap = clickable.parentNode;
+    var draggableWrap = draggable.parentNode;
+    var clickableHeadWrap = clickableWrap.parentNode;
+    var clickableArrows = clickableHeadWrap.getElementsByClassName("swiper__arrow");
+    var startOffsetX = clickableWrap.getBoundingClientRect().left;
+    var clickableLimits = [0, clickableWrap.offsetWidth - (clickable.offsetWidth + 2)];
+    var draggablePxPercent = (draggable.offsetWidth - draggableWrap.offsetWidth) / 100;
+    var clickablePxPercent = (clickableLimits[1]/100);
+    var draggableMultiply = draggablePxPercent / clickablePxPercent;
+    var controlsNow = controls.getElementsByClassName("tvguide-controls__now")[0];
+    var nowLimits = [];
 
-        var move = function (x,y) {
-            var clickableLimits = [0, clickableWrap.offsetWidth - (clickable.offsetWidth + 2)];
-            var draggablePxPercent = (draggable[0].offsetWidth - draggableWrap.offsetWidth) / 100;
-            var clickablePxPercent = (clickableLimits[1]/100);
-            var draggableMultiply = draggablePxPercent / clickablePxPercent;
-            clickable.dataset.offset = parseInt(clickable.dataset.offset) + x;
+    function move(x) {
+        clickable.dataset.offset = parseInt(clickable.dataset.offset) + x;
 
-            if(clickable.dataset.offset < clickableLimits[0]){
-                clickable.dataset.offset = clickableLimits[0];
-            } else if(clickable.dataset.offset > clickableLimits[1]){
-                clickable.dataset.offset = clickableLimits[1];
-            }
-
-            clickable.style.transform = "translate3d(" + clickable.dataset.offset + "px, 0px, 0px)";
-
-            for(var i = 0; i < draggable.length; i++){
-                var xTranslate = -1 * clickable.dataset.offset * draggableMultiply;
-                draggable[i].style.transform = "translate3d(" + xTranslate + "px, 0px, 0px)";
-            }
+        if(clickable.dataset.offset < clickableLimits[0]){
+            clickable.dataset.offset = clickableLimits[0];
+        } else if(clickable.dataset.offset > clickableLimits[1]){
+            clickable.dataset.offset = clickableLimits[1];
         }
-        var mouseMoveHandler = function (e) {
-            e = e || window.event;
 
-            if(!drag){return true};
+        clickable.style.transform = "translate3d(" + clickable.dataset.offset + "px, 0px, 0px)";
 
-            var x = mouseX(e);
-            var y = mouseY(e);
-            if (x != offsetX || y != offsetY) {
-                move(x-offsetX,y-offsetY);
-                offsetX = x;
-                offsetY = y;
-            }
-            return false;
+        var xTranslate = -1 * clickable.dataset.offset * draggableMultiply;
+        draggable.style.transform = "translate3d(" + xTranslate + "px, 0px, 0px)";
+
+        if(clickable.dataset.offset < nowLimits[0] || clickable.dataset.offset > nowLimits[1]){
+            controlsNow.classList.remove("hidden");
+        } else {
+            controlsNow.classList.add("hidden");
         }
-        var start_drag = function (e) {
-            e = e || window.event;
-
-            offsetX=mouseX(e);
-            offsetY=mouseY(e);
-            drag=true;
-
-            if (document.body.onmousemove) {
-                mousemoveTemp = document.body.onmousemove;
-            }
-            document.body.onmousemove = mouseMoveHandler;
-            return false;
-        }
-        var stop_drag = function () {
-            drag=false;
-
-            if (mousemoveTemp) {
-                document.body.onmousemove = mousemoveTemp;
-                mousemoveTemp = null;
-            }
-            return false;
-        }
-        clickable.onmousedown = start_drag;
-        window.onmouseup = stop_drag;
     }
-}
+    function mouseMoveHandler(e) {
+        e = e || window.event;
 
-draggable(
-    document.getElementsByClassName("swiper__scrollbar__drag")[0],
-    [
-        document.getElementsByClassName("timeline")[0]
-        //TODO add tvguide
-    ]
-);
+        if(!drag){return true};
+
+        var x = mouseX(e);
+        if (x != offsetX) {
+            move(x-offsetX);
+            offsetX = x;
+        }
+    }
+    function startDrag(e) {
+        e = e || window.event;
+
+        offsetX=mouseX(e);
+        drag=true;
+
+        if (document.body.onmousemove) {
+            mousemoveTemp = document.body.onmousemove;
+        }
+        document.body.onmousemove = mouseMoveHandler;
+    }
+    function stopDrag() {
+        drag=false;
+        clearTimeout(moveTimeout);
+        moveDelay = 1000;
+        offsetX = clickable.dataset.offset;
+
+        if (mousemoveTemp) {
+            document.body.onmousemove = mousemoveTemp;
+            mousemoveTemp = null;
+        }
+    }
+    function moveManager(e){
+        if(e.button != 0) return false;
+        switch (e.target){
+        case clickable:
+            startDrag(e);
+        case clickableWrap:
+            move(mouseX(e) - startOffsetX - clickable.dataset.offset - clickable.offsetWidth / 2);
+            startDrag(e);
+        default:
+            for(var i = 0; i < clickableArrows.length; i++){
+                //NOTE targets svg / path
+                if(e.path.indexOf(clickableArrows[i]) >= 0){
+                    var tempX = clickablePxPercent * arrowPercent;
+                    if(clickableArrows[i].classList.contains("swiper__arrow__left")){
+                        tempX *= -1;
+                    }
+                    function keepMoving(){
+                        move(tempX);
+                        if(moveDelay > 50){
+                            moveDelay /= 2;
+                        }
+                        moveTimeout = setTimeout(keepMoving, moveDelay);
+                    }
+                    keepMoving();
+                    break;
+                }
+            }
+        }
+    }
+    function controlsChange(e){
+        if(e.target.classList.contains("datecontrol__day__number")){
+            var controlDays = controls.getElementsByClassName("datecontrol__day");
+            for(var i = 0; i < controlDays.length; i++){
+                controlDays[i].classList.remove("datecontrol__day__current");
+            }
+            e.target.parentNode.classList.add("datecontrol__day__current");
+            moveToDay(parseInt(e.target.dataset.day));
+        }
+    }
+    function moveToNow(){
+        var now = new Date();
+        var day = 0;
+        var hour = now.getHours();
+        if(now.getHours() <= 1){
+            day = -1;
+        } else {
+            hour -= 1;
+        }
+        moveToDay(day, hour);
+        controlsNow.dataset.offset = clickable.dataset.offset;
+        nowLimits = [
+            parseInt(controlsNow.dataset.offset) - (arrowPercent * clickablePxPercent / 2),
+            parseInt(controlsNow.dataset.offset) + (arrowPercent * clickablePxPercent)
+        ];
+    }
+    function moveToDay(day, hour){
+        if(typeof hour == "undefined") hour = 7;
+        var hourBlocks = (24 * (day + 1) + hour);
+        var hourOffset = (hourBlocks * currentHourWidth / draggablePxPercent) * clickablePxPercent;
+        move(hourOffset - clickable.dataset.offset);
+    }
+    clickableHeadWrap.onmousedown = moveManager;
+    window.onmouseup = stopDrag;
+    controls.onclick = controlsChange;
+    console.log(controlsNow);
+    controlsNow.onclick = moveToNow;
+    moveToNow();
+}
