@@ -75,12 +75,14 @@ var Swiper = function(wrapper){
     this.timeline = this.wrapper.getElementsByClassName("timeline")[0];
     this.hours = this.wrapper.getElementsByClassName("timeline__hour");
     this.timemarker = this.wrapper.getElementsByClassName("timemarker")[0];
+    this.guide = this.wrapper.getElementsByClassName("tvguide__guide")[0];
     this.hourWidth = bigHourWidth;
     this.markerOffset;
 }
 
 Swiper.prototype.init = function(){
     this.timeline.setAttribute("style", "width: " + this.hours.length * this.hourWidth + "px");
+    this.guide.setAttribute("style", "width: " + this.hours.length * this.hourWidth + "px");
     var dragWidth = 100 / this.hours.length;
     if(dragWidth < 30) dragWidth = 3;
     this.swiper__drag.setAttribute("style", "width: " + dragWidth + "%;")
@@ -100,6 +102,7 @@ Swiper.prototype.setMarkerPosition = function(date){
                 "style",
                 "transform: translate3d(" + this.markerOffset + "px, 0px, 0px)"
             );
+            // this.timemarker.dataset.offset = this.markerOffset; //NOTE
             break;
         }
     }
@@ -429,7 +432,6 @@ function draggable (clickable, draggable) {
 draggable(
     document.getElementsByClassName("swiper__scrollbar__drag")[0],
     [
-        document.getElementsByClassName("timeline")[0]
-        //TODO add tvguide
+        document.getElementsByClassName("tvguide__guide")[0]
     ]
 );
