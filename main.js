@@ -433,6 +433,7 @@ function draggable (clickable, draggable) {
             }
         }
         function moveManager(e){
+            if(e.button != 0) return false;
             switch (e.target){
             case clickable:
                 startDrag(e);
