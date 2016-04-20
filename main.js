@@ -567,7 +567,7 @@ function filterChange(e){
         }
         var tvevents = document.getElementsByClassName("tvevent");
         if(e.target.checked){
-            if(checkedFilters.length <= 1){
+            if(checkedFilters <= 1){
                 for(var i = 0; i < tvevents.length; i++){
                     if(parseInt(tvevents.item(i).dataset.type) != parseInt(e.target.value)){
                         tvevents.item(i).classList.add("tvevent__unselected");
@@ -581,11 +581,9 @@ function filterChange(e){
                 }
             }
         } else {
-            if(checkedFilters.length <= 1){
+            if(checkedFilters < 1){
                 for(var i = 0; i < tvevents.length; i++){
-                    if(parseInt(tvevents.item(i).dataset.type) != parseInt(e.target.value)){
-                        tvevents.item(i).classList.remove("tvevent__unselected");
-                    }
+                    tvevents.item(i).classList.remove("tvevent__unselected");
                 }
             } else {
                 for(var i = 0; i < tvevents.length; i++){
