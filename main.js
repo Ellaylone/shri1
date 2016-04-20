@@ -266,11 +266,11 @@ function formTvGuide(data){
             var chanElemTitle = document.createElement("span");
             chanElemTitle.classList.add("tvevent__title");
             var timemarker = document.getElementsByClassName("timemarker")[0];
-            if(parseInt(timemarker.dataset.offset) < rightOffset){
+            if(parseInt(timemarker.dataset.offset) > rightOffset){
+                chanElemTitle.classList.add("tvevent__title__past");
+            } else {
                 if(parseInt(timemarker.dataset.offset) > leftOffset){
                     chanElemTitle.classList.add("tvevent__title__now");
-                } else {
-                    chanElemTitle.classList.add("tvevent__title__past");
                 }
             }
 
