@@ -81,7 +81,9 @@ var Swiper = function(wrapper){
 
 Swiper.prototype.init = function(){
     this.timeline.setAttribute("style", "width: " + this.hours.length * this.hourWidth + "px");
-    this.swiper__drag.setAttribute("style", "width: " + 100 / this.hours.length + "%;")
+    var dragWidth = 100 / this.hours.length;
+    if(dragWidth < 30) dragWidth = 3;
+    this.swiper__drag.setAttribute("style", "width: " + dragWidth + "%;")
     this.markerTimeout.apply(this);
 }
 
@@ -360,12 +362,27 @@ function draggable (clickable, draggable) {
     var mousemoveTemp = null;
 
     if (draggable.length > 0) {
+        var clickableWrap = clickable.parentNode;
+        var draggableWrap = draggable[0].parentNode;
+
         var move = function (x,y) {
+            var clickableLimits = [0, clickableWrap.offsetWidth - (clickable.offsetWidth + 2)];
+            var draggablePxPercent = (draggable[0].offsetWidth - draggableWrap.offsetWidth) / 100;
+            var clickablePxPercent = (clickableLimits[1]/100);
+            var draggableMultiply = draggablePxPercent / clickablePxPercent;
             clickable.dataset.offset = parseInt(clickable.dataset.offset) + x;
 
+            if(clickable.dataset.offset < clickableLimits[0]){
+                clickable.dataset.offset = clickableLimits[0];
+            } else if(clickable.dataset.offset > clickableLimits[1]){
+                clickable.dataset.offset = clickableLimits[1];
+            }
+
+            clickable.style.transform = "translate3d(" + clickable.dataset.offset + "px, 0px, 0px)";
+
             for(var i = 0; i < draggable.length; i++){
-                var xTranslate = (draggable[i].dir == "rtl" ? -1 : 1) * clickable.dataset.offset;
-                draggable[i].elem.style.transform = "translate3d(" + xTranslate + "px, 0px, 0px)";
+                var xTranslate = -1 * clickable.dataset.offset * draggableMultiply;
+                draggable[i].style.transform = "translate3d(" + xTranslate + "px, 0px, 0px)";
             }
         }
         var mouseMoveHandler = function (e) {
@@ -412,14 +429,7 @@ function draggable (clickable, draggable) {
 draggable(
     document.getElementsByClassName("swiper__scrollbar__drag")[0],
     [
-        {
-            "elem": document.getElementsByClassName("swiper__scrollbar__drag")[0],
-            "dir": "ltr"
-        },
-        {
-            "elem": document.getElementsByClassName("timeline")[0],
-            "dir": "rtl"
-        }
+        document.getElementsByClassName("timeline")[0]
         //TODO add tvguide
     ]
 );
