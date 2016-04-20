@@ -559,12 +559,40 @@ var filters = tvguideFilters.getElementsByTagName("input");
 
 function filterChange(e){
     if(e.target.type == "checkbox"){
+        var checkedFilters = 0;
+        for(var i = 0; i < filters.length; i++){
+            if(filters.item(i).checked){
+                checkedFilters++;
+            }
+        }
         var tvevents = document.getElementsByClassName("tvevent");
-        for(var i = 0; i < tvevents.length; i++){
-            if(parseInt(tvevents.item(i).dataset.type) == parseInt(e.target.value) && e.target.checked){
-                tvevents.item(i).classList.add("tvevent__unselected");
+        if(e.target.checked){
+            if(checkedFilters.length <= 1){
+                for(var i = 0; i < tvevents.length; i++){
+                    if(parseInt(tvevents.item(i).dataset.type) != parseInt(e.target.value)){
+                        tvevents.item(i).classList.add("tvevent__unselected");
+                    }
+                }
             } else {
-                tvevents.item(i).classList.remove("tvevent__unselected");
+                for(var i = 0; i < tvevents.length; i++){
+                    if(parseInt(tvevents.item(i).dataset.type) == parseInt(e.target.value)){
+                        tvevents.item(i).classList.remove("tvevent__unselected");
+                    }
+                }
+            }
+        } else {
+            if(checkedFilters.length <= 1){
+                for(var i = 0; i < tvevents.length; i++){
+                    if(parseInt(tvevents.item(i).dataset.type) != parseInt(e.target.value)){
+                        tvevents.item(i).classList.remove("tvevent__unselected");
+                    }
+                }
+            } else {
+                for(var i = 0; i < tvevents.length; i++){
+                    if(parseInt(tvevents.item(i).dataset.type) == parseInt(e.target.value)){
+                        tvevents.item(i).classList.add("tvevent__unselected");
+                    }
+                }
             }
         }
     }
