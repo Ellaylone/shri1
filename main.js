@@ -486,7 +486,7 @@ function draggable (clickable, draggable, controls) {
         if(typeof hour == "undefined") hour = 7;
         var hourBlocks = (24 * (day + 1) + hour);
         var hourOffset = (hourBlocks * currentHourWidth / draggablePxPercent) * clickablePxPercent;
-        move(hourOffset - clickable.dataset.offset - clickable.offsetWidth / 2);
+        move(hourOffset - clickable.dataset.offset);
     }
     clickableHeadWrap.onmousedown = moveManager;
     window.onmouseup = stopDrag;
