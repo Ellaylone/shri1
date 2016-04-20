@@ -245,13 +245,24 @@ body {
     height: 100%;
     position: absolute;
     border-left: 1px solid #ededed;
-    color: #000;
     padding: 16px 5px;
     font-size: 12px;
 }
 
 .tvevent__unselected {
     opacity: .2;
+}
+
+.tvevent__title {
+    color: #000;
+}
+
+.tvevent__title__now {
+    color: #f7636a;
+}
+
+.tvevent__title__past {
+    color: #898989;
 }
 
 .tvevent span {

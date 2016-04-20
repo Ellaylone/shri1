@@ -105,6 +105,7 @@ Swiper.prototype.setMarkerPosition = function(date){
                 "style",
                 "transform: translate3d(" + this.markerOffset + "px, 0px, 0px)"
             );
+            this.timemarker.dataset.offset = this.markerOffset;
             break;
         }
     }
@@ -249,17 +250,35 @@ function formTvGuide(data){
             chanElem.classList.add("tvevent");
             chanElem.dataset.title = tvEvents[i].title;
             chanElem.setAttribute("tooltip", tvEvents[i].description);
-            var tvEventHour = ((tvEvents[i].day + 1) * 24 + parseInt(tvEvents[i].hour / 60));
-            var tvEventMinutes = parseInt(tvEvents[i].hour % 60);
-            chanElem.style.left =  tvEventHour * currentHourWidth + (currentHourWidth / 60) * tvEventMinutes + "px";
+            var tvEventHour = [];
+            var tvEventMinutes = [];
+            for(var i = 0; i < tvEvents[i].time.length; i++){
+                tvEventHour.push((tvEvents[i].day + 1) * 24 + parseInt(tvEvents[i].time[0] / 60));
+                tvEventMinutes.push(parseInt(tvEvents[i].time[0] % 60));
+            }
+
+            var leftOffset = tvEventHour[0] * currentHourWidth + (currentHourWidth / 60) * tvEventMinutes[0];
+            var rightOffset = tvEventHour[1] * currentHourWidth + (currentHourWidth / 60) * tvEventMinutes[1];
+            chanElem.style.left = leftOffset + "px";
+            chanElem.dataset.right = rightOffset + "px";
             chanElem.dataset.type = tvEvents[i].type;
 
             var chanElemTitle = document.createElement("span");
+            chanElemTitle.classList.add("tvevent__title");
+            var timemarker = document.getElementsByClassName("timemarker")[0];
+            if(parseInt(timemarker.dataset.offset) < rightOffset){
+                if(parseInt(timemarker.dataset.offset) > leftOffset){
+                    chanElemTitle.classList.add("tvevent__title__now");
+                } else {
+                    chanElemTitle.classList.add("tvevent__title__past");
+                }
+            }
+
             var chanElemTitleText = document.createTextNode(tvEvents[i].title);
             chanElemTitle.appendChild(chanElemTitleText);
 
             var chanElemTime = document.createElement("span");
-            var chanElemTimeText = document.createTextNode(tvEventHour + ":" + pad(tvEventMinutes, 2));
+            var chanElemTimeText = document.createTextNode(tvEventHour[0] + ":" + pad(tvEventMinutes[0], 2));
             chanElemTime.appendChild(chanElemTimeText);
 
             chanElem.appendChild(chanElemTitle);
@@ -288,24 +307,26 @@ var randWords = ["новости", "вести", "врата", "египта", "
 
 function generateTvevents(){
     var results = [];
-    var eventLength = [20, 30, 45, 60, 90];
+    var eventLength = [30, 45, 60, 90];
     var showTime = [6, 23];
     for(var i = -1; i < TVGUIDE_DAYS; i++){
-        var currentTime = showTime[0] * 60;
-        while(currentTime < (showTime[1] * 60)){
-            currentTime += eventLength.random();
-            results.push(generateRandomTvevent(i, currentTime));
+        var startTime = showTime[0] * 60;
+        var endTime = startTime + eventLength.random();
+        while(startTime < (showTime[1] * 60)){
+            startTime = endTime;
+            endTime += eventLength.random();
+            results.push(generateRandomTvevent(i, [startTime, endTime]));
         }
     }
     return results;
 }
 
-function generateRandomTvevent(day, hour){
+function generateRandomTvevent(day, time){
     var result = {
         "title": "",
         "description": "",
         "day": day,
-        "hour": hour,
+        "time": time,
         "type": [0,1,2].random()
     };
     for(var i = 0; i < Math.floor(Math.random() * (2 - 1 + 1)) + 1; i++){
