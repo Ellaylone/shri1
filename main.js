@@ -293,7 +293,7 @@ function generateTvevents(){
         var currentTime = showTime[0] * 60;
         while(currentTime < (showTime[1] * 60)){
             currentTime += eventLength.random();
-            results[i].push(generateRandomTvevent(i, currentTime));
+            results.push(generateRandomTvevent(i, currentTime));
         }
     }
     return results;
