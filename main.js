@@ -127,6 +127,7 @@ var Modal = function(elem, confirm, toggle){
                 hideTvGuide();
                 clearAll();
                 formChannels(channelsData);
+                formTimeLine();
             }
         },
         false
@@ -253,7 +254,6 @@ function clearAll(){
 }
 
 function clearTvGuide(){
-    document.getElementsByClassName("timemarker")[0].innerHTML = "";
     document.getElementsByClassName("timeline")[0].innerHTML = "";
     document.getElementsByClassName("tvguide__guide__channels")[0].innerHTML = "";
 }
