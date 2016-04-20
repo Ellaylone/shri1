@@ -552,3 +552,20 @@ function draggable (clickable, draggable, controls) {
     controlsNow.onclick = moveToNow;
     moveToNow();
 }
+
+var tvguideFilters = document.getElementsByClassName("tvguide-filters")[0];
+tvguideFilters.onchange = filterChange;
+var filters = tvguideFilters.getElementsByTagName("input");
+
+function filterChange(e){
+    if(filters.indexOf(e.target) >= 0){
+        var tvevents = document.getElementsByClassName("tvevent");
+        for(var i = 0; i < tvevents.lenth; i++){
+            if(tvevents[i].dataset.type == e.target.value && e.target.checked){
+                tvevents[i].classList.add("tvevent__selected");
+            } else {
+                tvevents[i].classList.remove("tvevent__selected");
+            }
+        }
+    }
+}
