@@ -229,7 +229,6 @@ function formTvGuide(data){
     });
 
     var guideChannels = elem.getElementsByClassName("tvguide__guide__channels")[0];
-    guideChannels.innerHTML = "";
     selectedChannels.forEach(function(channel){
         var chElem = document.createElement("li");
         chElem.classList.add("tvguide__guide__channels__channel");
@@ -247,7 +246,9 @@ function clearAll(){
 }
 
 function clearTvGuide(){
-    document.getElementsByClassName("tvguide__guide")[0].innerHTML = "";
+    document.getElementsByClassName("timemarker")[0].innerHTML = "";
+    document.getElementsByClassName("timeline")[0].innerHTML = "";
+    document.getElementsByClassName("tvguide__guide__channels")[0].innerHTML = "";
 }
 
 function clearFilters(){
