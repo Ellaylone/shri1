@@ -160,6 +160,7 @@ body {
     background-color: white;
     position: absolute;
     top: 50px;
+    z-index: 1;
 }
 
 .tvguide__channels__channel {
@@ -220,15 +221,20 @@ body {
 
 .tvguide__guide__channels__channel {
     height: 70px;
+    border-bottom: 1px solid #eee;
 }
 
 .modal {
     background: #fff;
-    position: relative;
+    position: fixed;
     margin: 0 auto;
     padding: 35px;
     max-width: 1000px;
+    left: 50%;
+    top: 50%;
+    width: 85%;
     z-index: 2;
+    transform: translate(-50%, -50%);
 }
 
 .modal__close {
@@ -264,5 +270,10 @@ body {
     }
     .timeline {
         height: 25px;
+    }
+}
+@media (max-width: 550px){
+    .channellist__channel{
+        width: 50%;
     }
 }
