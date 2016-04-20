@@ -252,9 +252,9 @@ function formTvGuide(data){
             chanElem.setAttribute("tooltip", tvEvents[i].description);
             var tvEventHour = [];
             var tvEventMinutes = [];
-            for(var i = 0; i < tvEvents[i].time.length; i++){
-                tvEventHour.push((tvEvents[i].day + 1) * 24 + parseInt(tvEvents[i].time[0] / 60));
-                tvEventMinutes.push(parseInt(tvEvents[i].time[0] % 60));
+            for(var j = 0; j < tvEvents[i].time.length; j++){
+                tvEventHour.push((tvEvents[i].day + 1) * 24 + parseInt(tvEvents[i].time[j] / 60));
+                tvEventMinutes.push(parseInt(tvEvents[i].time[j] % 60));
             }
 
             var leftOffset = tvEventHour[0] * currentHourWidth + (currentHourWidth / 60) * tvEventMinutes[0];
