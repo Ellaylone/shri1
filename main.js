@@ -558,13 +558,13 @@ tvguideFilters.onchange = filterChange;
 var filters = tvguideFilters.getElementsByTagName("input");
 
 function filterChange(e){
-    if(filters.indexOf(e.target) >= 0){
+    if(e.target.type == "checkbox"){
         var tvevents = document.getElementsByClassName("tvevent");
-        for(var i = 0; i < tvevents.lenth; i++){
-            if(tvevents[i].dataset.type == e.target.value && e.target.checked){
-                tvevents[i].classList.add("tvevent__selected");
+        for(var i = 0; i < tvevents.length; i++){
+            if(parseInt(tvevents.item(i).dataset.type) == parseInt(e.target.value) && e.target.checked){
+                tvevents.item(i).classList.add("tvevent__unselected");
             } else {
-                tvevents[i].classList.remove("tvevent__selected");
+                tvevents.item(i).classList.remove("tvevent__unselected");
             }
         }
     }
