@@ -244,7 +244,7 @@ function formTvGuide(data){
         var chanElem = document.createElement("li");
         chanElem.classList.add("tvevent");
         chanElem.dataset.title = "lorem ipsum";
-        chanElem.dataset.description = "lorem ipsum";
+        chanElem.setAttribute("description", "lorem ipsum");
         chanElem.dataset.type = 1;
 
         var chanElemTitle = document.createElement("span");
@@ -256,6 +256,7 @@ function formTvGuide(data){
         chanElemTime.appendChild(chanElemTimeText);
 
         chanElem.appendChild(chanElemTitle);
+        chanElem.appendChild(chanElemTime);
         chan.appendChild(chanElem);
         guideChannels.appendChild(chan);
     });
