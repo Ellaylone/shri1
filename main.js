@@ -2,9 +2,11 @@ const DATALIST = {
     channels: "channels.json",
     tvguide: "tvguide.json"
 };
+const TVGUIDE_DAYS = 7;
 const widthChange = 767,
       smallHourWidth = 100,
-      bigHourWidth = 300;
+      bigHourWidth = 300,
+      currentHourWidth = 300;
 var channelsData, tvguideData;
 
 function createCookie(name, value, days) {
@@ -64,6 +66,7 @@ function onWindowResize(e){
     } else {
         tvguideSwiper.hourWidth = bigHourWidth;
     }
+    currentHourWidth = tvguideSwiper.hourWidth;
     tvguideSwiper.init();
 }
 window.addEventListener("resize", throttle(onWindowResize, 100));
@@ -303,7 +306,7 @@ function formTimeLine(){
     var timeline = document.getElementsByClassName("timeline")[0];
     var dateControlWrap = document.getElementsByClassName("datecontrol")[0];
     var dayNames = ["вс", "пн", "вт", "ср", "чт", "пт", "сб"];
-    for(var i = -1; i < 6; i++){
+    for(var i = -1; i < (TVGUIDE_DAYS - 1); i++){
         var tempDate = new Date(now + (i * day));
         var guideDay = tempDate.getDate();
         for(var j = 0; j < 24; j++){
@@ -461,7 +464,23 @@ function draggable (clickable, draggable) {
                 }
             }
         }
+        function moveToNow(){
+            var now = new Date();
+            var day = 0;
+            var hour = now.getHours();
+            if(now.getHours() <= 1){
+                day = -1;
+            } else {
+                hour -= 1;
+            }
+            moveToDay(day, hour);
+        }
+        function moveToDay(day, hour){
+            var hourBlocks = (24 * (day + 1) + hour);
+            move((hourBlocks * currentHourWidth / draggablePxPercent) * clickablePxPercent);
+        }
         clickableHeadWrap.onmousedown = moveManager;
         window.onmouseup = stopDrag;
+        moveToNow();
     }
 }
