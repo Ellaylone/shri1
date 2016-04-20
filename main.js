@@ -105,7 +105,6 @@ Swiper.prototype.setMarkerPosition = function(date){
                 "style",
                 "transform: translate3d(" + this.markerOffset + "px, 0px, 0px)"
             );
-            // this.timemarker.dataset.offset = this.markerOffset; //NOTE
             break;
         }
     }
@@ -202,7 +201,6 @@ function formChannels(data){
 function formTvGuide(data){
     tvguideData = data;
     data = JSON.parse(data);
-    console.log(data);
     var elem = document.getElementsByClassName("tvguide__guide")[0];
     var filterElem = document.getElementsByClassName("tvguide-filters")[0];
 
@@ -385,6 +383,7 @@ function draggable (clickable, draggable, controls) {
     var clickablePxPercent = (clickableLimits[1]/100);
     var draggableMultiply = draggablePxPercent / clickablePxPercent;
     var controlsNow = controls.getElementsByClassName("tvguide-controls__now")[0];
+    var controlDays = controls.getElementsByClassName("datecontrol__day");
     var nowLimits = [];
 
     function move(x) {
@@ -400,6 +399,8 @@ function draggable (clickable, draggable, controls) {
 
         var xTranslate = -1 * clickable.dataset.offset * draggableMultiply;
         draggable.style.transform = "translate3d(" + xTranslate + "px, 0px, 0px)";
+        var dayWidth = -1 * 24 * currentHourWidth;
+        markChange(Math.floor(xTranslate / dayWidth) - 1);
 
         if(clickable.dataset.offset < nowLimits[0] || clickable.dataset.offset > nowLimits[1]){
             controlsNow.classList.remove("hidden");
@@ -469,9 +470,17 @@ function draggable (clickable, draggable, controls) {
             }
         }
     }
+    function markChange(day){
+        for(var i = 0; i < controlDays.length; i++){
+            if(parseInt(controlDays[i].getElementsByClassName("datecontrol__day__number")[0].dataset.day) == day){
+                controlDays[i].classList.add("datecontrol__day__current");
+            } else {
+                controlDays[i].classList.remove("datecontrol__day__current");
+            }
+        }
+    }
     function controlsChange(e){
         if(e.target.classList.contains("datecontrol__day__number")){
-            var controlDays = controls.getElementsByClassName("datecontrol__day");
             for(var i = 0; i < controlDays.length; i++){
                 controlDays[i].classList.remove("datecontrol__day__current");
             }
@@ -504,7 +513,6 @@ function draggable (clickable, draggable, controls) {
     clickableHeadWrap.onmousedown = moveManager;
     window.onmouseup = stopDrag;
     controls.onclick = controlsChange;
-    console.log(controlsNow);
     controlsNow.onclick = moveToNow;
     moveToNow();
 }
