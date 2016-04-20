@@ -238,10 +238,19 @@ function formTvGuide(data){
 
     var guideChannels = elem.getElementsByClassName("tvguide__guide__channels")[0];
     selectedChannels.forEach(function(channel){
-        var chElem = document.createElement("li");
-        chElem.classList.add("tvguide__guide__channels__channel");
+        var chan = document.createElement("ul");
+        chan.classList.add("tvguide__guide__channels__channel");
 
-        guideChannels.appendChild(chElem);
+        var chanElem = document.createElement("li");
+        chanElem.classList.add("tvevent");
+        chanElem.dataset.title = "lorem ipsum";
+        chanElem.dataset.description = "lorem ipsum";
+
+        var chanElemText = document.createTextNode("lorem ipsum");
+
+        chanElem.appendChild(chanElemText);
+        chan.appendChild(chanElem);
+        guideChannels.appendChild(chan);
     });
 
     showTvGuide();
