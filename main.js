@@ -327,3 +327,100 @@ function formTimeLine(){
     tvguideSwiper.init();
     showTvGuide();
 }
+
+
+function mouseX (e) {
+    if (e.pageX) {
+        return e.pageX;
+    }
+    if (e.clientX) {
+        return e.clientX + (document.documentElement.scrollLeft ?
+                            document.documentElement.scrollLeft :
+                            document.body.scrollLeft);
+    }
+    return null;
+}
+
+function mouseY (e) {
+    if (e.pageY) {
+        return e.pageY;
+    }
+    if (e.clientY) {
+        return e.clientY + (document.documentElement.scrollTop ?
+                            document.documentElement.scrollTop :
+                            document.body.scrollTop);
+    }
+    return null;
+}
+
+function draggable (clickable, draggable) {
+    var drag = false;
+    offsetX = 0;
+    offsetY = 0;
+    var mousemoveTemp = null;
+
+    if (draggable.length > 0) {
+        var move = function (x,y) {
+            clickable.dataset.offset = parseInt(clickable.dataset.offset) + x;
+
+            for(var i = 0; i < draggable.length; i++){
+                var xTranslate = (draggable[i].dir == "rtl" ? -1 : 1) * clickable.dataset.offset;
+                draggable[i].elem.style.transform = "translate3d(" + xTranslate + "px, 0px, 0px)";
+            }
+        }
+        var mouseMoveHandler = function (e) {
+            e = e || window.event;
+
+            if(!drag){return true};
+
+            var x = mouseX(e);
+            var y = mouseY(e);
+            if (x != offsetX || y != offsetY) {
+                move(x-offsetX,y-offsetY);
+                offsetX = x;
+                offsetY = y;
+            }
+            return false;
+        }
+        var start_drag = function (e) {
+            console.log("test");
+            e = e || window.event;
+
+            offsetX=mouseX(e);
+            offsetY=mouseY(e);
+            drag=true;
+
+            if (document.body.onmousemove) {
+                mousemoveTemp = document.body.onmousemove;
+            }
+            document.body.onmousemove = mouseMoveHandler;
+            return false;
+        }
+        var stop_drag = function () {
+            drag=false;
+
+            if (mousemoveTemp) {
+                document.body.onmousemove = mousemoveTemp;
+                mousemoveTemp = null;
+            }
+            return false;
+        }
+        clickable.onmousedown = start_drag;
+        clickable.onmouseup = stop_drag;
+    }
+}
+
+draggable(
+    document.getElementsByClassName("swiper__scrollbar__drag")[0],
+    [
+        {
+            "elem": document.getElementsByClassName("swiper__scrollbar__drag")[0],
+            "dir": "ltr"
+        },
+        {
+            "elem": document.getElementsByClassName("timeline")[0],
+            "dir": "rtl"
+        }
+        //TODO add tvguide
+    ]
+);
