@@ -252,6 +252,12 @@ function showTvGuide(){
     if(showCount >= 2){
         document.getElementsByClassName("spinner")[0].classList.add("hidden");
         document.getElementsByClassName("tvguide-wrapper")[0].classList.remove("hidden");
+        draggable(
+            document.getElementsByClassName("swiper__scrollbar__drag")[0],
+            [
+                document.getElementsByClassName("tvguide__guide")[0]
+            ]
+        );
     }
 }
 
@@ -360,19 +366,24 @@ function mouseY (e) {
 
 function draggable (clickable, draggable) {
     var drag = false;
-    offsetX = 0;
-    offsetY = 0;
+    var offsetX = 0;
     var mousemoveTemp = null;
+    var arrowPercent = 5;
+    var moveTimeout = null;
+    var moveDelay = 1000;
 
     if (draggable.length > 0) {
         var clickableWrap = clickable.parentNode;
         var draggableWrap = draggable[0].parentNode;
+        var clickableHeadWrap = clickableWrap.parentNode;
+        var clickableArrows = clickableHeadWrap.getElementsByClassName("swiper__arrow");
+        var startOffsetX = clickableWrap.getBoundingClientRect().left;
+        var clickableLimits = [0, clickableWrap.offsetWidth - (clickable.offsetWidth + 2)];
+        var draggablePxPercent = (draggable[0].offsetWidth - draggableWrap.offsetWidth) / 100;
+        var clickablePxPercent = (clickableLimits[1]/100);
+        var draggableMultiply = draggablePxPercent / clickablePxPercent;
 
-        var move = function (x,y) {
-            var clickableLimits = [0, clickableWrap.offsetWidth - (clickable.offsetWidth + 2)];
-            var draggablePxPercent = (draggable[0].offsetWidth - draggableWrap.offsetWidth) / 100;
-            var clickablePxPercent = (clickableLimits[1]/100);
-            var draggableMultiply = draggablePxPercent / clickablePxPercent;
+        function move(x) {
             clickable.dataset.offset = parseInt(clickable.dataset.offset) + x;
 
             if(clickable.dataset.offset < clickableLimits[0]){
@@ -388,50 +399,68 @@ function draggable (clickable, draggable) {
                 draggable[i].style.transform = "translate3d(" + xTranslate + "px, 0px, 0px)";
             }
         }
-        var mouseMoveHandler = function (e) {
+        function mouseMoveHandler(e) {
             e = e || window.event;
 
             if(!drag){return true};
 
             var x = mouseX(e);
-            var y = mouseY(e);
-            if (x != offsetX || y != offsetY) {
-                move(x-offsetX,y-offsetY);
+            if (x != offsetX) {
+                move(x-offsetX);
                 offsetX = x;
-                offsetY = y;
             }
-            return false;
         }
-        var start_drag = function (e) {
+        function startDrag(e) {
             e = e || window.event;
 
             offsetX=mouseX(e);
-            offsetY=mouseY(e);
             drag=true;
 
             if (document.body.onmousemove) {
                 mousemoveTemp = document.body.onmousemove;
             }
             document.body.onmousemove = mouseMoveHandler;
-            return false;
         }
-        var stop_drag = function () {
+        function stopDrag() {
             drag=false;
+            clearTimeout(moveTimeout);
+            moveDelay = 1000;
+            offsetX = clickable.dataset.offset;
 
             if (mousemoveTemp) {
                 document.body.onmousemove = mousemoveTemp;
                 mousemoveTemp = null;
             }
-            return false;
         }
-        clickable.onmousedown = start_drag;
-        window.onmouseup = stop_drag;
+        function moveManager(e){
+            switch (e.target){
+            case clickable:
+                startDrag(e);
+            case clickableWrap:
+                move(mouseX(e) - startOffsetX - clickable.dataset.offset - clickable.offsetWidth / 2);
+                startDrag(e);
+            default:
+                for(var i = 0; i < clickableArrows.length; i++){
+                    //NOTE targets svg / path
+                    if(e.path.indexOf(clickableArrows[i]) >= 0){
+                        var tempX = clickablePxPercent * arrowPercent;
+                        if(clickableArrows[i].classList.contains("swiper__arrow__left")){
+                            tempX *= -1;
+                        }
+                        function keepMoving(){
+                            move(tempX);
+                            if(moveDelay > 50){
+                                moveDelay /= 2;
+                            }
+                            moveTimeout = setTimeout(keepMoving, moveDelay);
+                        }
+                        keepMoving();
+                        break;
+                    }
+                }
+            }
+        }
+        clickableHeadWrap.onmousedown = moveManager;
+        window.onmouseup = stopDrag;
     }
 }
-
-draggable(
-    document.getElementsByClassName("swiper__scrollbar__drag")[0],
-    [
-        document.getElementsByClassName("tvguide__guide")[0]
-    ]
-);

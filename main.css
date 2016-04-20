@@ -99,6 +99,7 @@ body {
 
 .swiper {
     height: 25px;
+    margin-bottom: 5px;
 }
 
 .swiper__arrow {
