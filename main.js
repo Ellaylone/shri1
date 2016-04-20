@@ -504,5 +504,7 @@ function draggable (clickable, draggable, controls) {
     clickableHeadWrap.onmousedown = moveManager;
     window.onmouseup = stopDrag;
     controls.onclick = controlsChange;
+    console.log(controlsNow);
+    controlsNow.onclick = moveToNow;
     moveToNow();
 }
