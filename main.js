@@ -244,7 +244,7 @@ function formTvGuide(data){
         var chanElem = document.createElement("li");
         chanElem.classList.add("tvevent");
         chanElem.dataset.title = "lorem ipsum";
-        chanElem.setAttribute("description", "lorem ipsum");
+        chanElem.setAttribute("tooltip", "lorem ipsum");
         chanElem.dataset.type = 1;
 
         var chanElemTitle = document.createElement("span");

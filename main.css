@@ -18,8 +18,12 @@ body {
 
 [tooltip]:before {            
     position : absolute;
-     content : attr(tooltip);
-     opacity : 0;
+    content : attr(tooltip);
+    opacity : 0;
+    top: -15px;
+    background-color: #636262;
+    color: white;
+    padding: 3px 6px;
 }
 
 [tooltip]:hover:before {        
