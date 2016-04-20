@@ -384,6 +384,8 @@ function draggable (clickable, draggable, controls) {
     var draggablePxPercent = (draggable.offsetWidth - draggableWrap.offsetWidth) / 100;
     var clickablePxPercent = (clickableLimits[1]/100);
     var draggableMultiply = draggablePxPercent / clickablePxPercent;
+    var controlsNow = controls.getElementsByClassName("tvguide-controls__now")[0];
+    var nowLimits = [];
 
     function move(x) {
         clickable.dataset.offset = parseInt(clickable.dataset.offset) + x;
@@ -398,6 +400,12 @@ function draggable (clickable, draggable, controls) {
 
         var xTranslate = -1 * clickable.dataset.offset * draggableMultiply;
         draggable.style.transform = "translate3d(" + xTranslate + "px, 0px, 0px)";
+
+        if(clickable.dataset.offset < nowLimits[0] || clickable.dataset.offset > nowLimits[1]){
+            controlsNow.classList.remove("hidden");
+        } else {
+            controlsNow.classList.add("hidden");
+        }
     }
     function mouseMoveHandler(e) {
         e = e || window.event;
@@ -481,6 +489,11 @@ function draggable (clickable, draggable, controls) {
             hour -= 1;
         }
         moveToDay(day, hour);
+        controlsNow.dataset.offset = clickable.dataset.offset;
+        nowLimits = [
+            parseInt(controlsNow.dataset.offset) - (arrowPercent * clickablePxPercent / 2),
+            parseInt(controlsNow.dataset.offset) + (arrowPercent * clickablePxPercent)
+        ];
     }
     function moveToDay(day, hour){
         if(typeof hour == "undefined") hour = 7;
