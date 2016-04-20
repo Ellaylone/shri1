@@ -213,6 +213,15 @@ body {
     padding: 5px 0;
 }
 
+.tvguide__guide__channels {
+    background-color: #fff;
+    list-style: none;
+}
+
+.tvguide__guide__channels__channel {
+    height: 70px;
+}
+
 .modal {
     background: #fff;
     position: relative;
