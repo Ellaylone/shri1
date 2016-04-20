@@ -584,6 +584,7 @@ function draggable (clickable, draggable, controls) {
         var hour = now.getHours();
         if(now.getHours() <= 1){
             day = -1;
+            hour = 23;
         } else {
             hour -= 1;
         }
