@@ -245,10 +245,17 @@ function formTvGuide(data){
         chanElem.classList.add("tvevent");
         chanElem.dataset.title = "lorem ipsum";
         chanElem.dataset.description = "lorem ipsum";
+        chanElem.dataset.type = 1;
 
-        var chanElemText = document.createTextNode("lorem ipsum");
+        var chanElemTitle = document.createElement("span");
+        var chanElemTitleText = document.createTextNode("lorem ipsum");
+        chanElemTitle.appendChild(chanElemTitleText);
 
-        chanElem.appendChild(chanElemText);
+        var chanElemTime = document.createElement("span");
+        var chanElemTimeText = document.createTextNode("9:00");
+        chanElemTime.appendChild(chanElemTimeText);
+
+        chanElem.appendChild(chanElemTitle);
         chan.appendChild(chanElem);
         guideChannels.appendChild(chan);
     });
