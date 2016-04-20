@@ -127,7 +127,6 @@ var Modal = function(elem, confirm, toggle){
                 hideTvGuide();
                 clearAll();
                 formChannels(channelsData);
-                formTvGuide(tvguideData);
             }
         },
         false
@@ -150,7 +149,11 @@ Modal.prototype.hide = function(){
 }
 
 function formChannels(data){
-    channelsData = data;
+    var firstCall = false;
+    if(data != channelsData){
+        channelsData = data;
+        firstCall = true;
+    }
     data = JSON.parse(data);
     var elem = document.getElementsByClassName("tvguide__channels")[0];
     var channellist = document.getElementById("channellistModal");
@@ -197,7 +200,11 @@ function formChannels(data){
             });
         }
     }
-    getData(DATALIST.tvguide, formTvGuide);
+    if(firstCall){
+        getData(DATALIST.tvguide, formTvGuide);
+    } else {
+        formTvGuide(tvguideData);
+    }
     showTvGuide();
 }
 
