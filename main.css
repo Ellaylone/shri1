@@ -16,6 +16,16 @@ body {
     cursor: pointer;
 }
 
+[tooltip]:before {            
+    position : absolute;
+     content : attr(tooltip);
+     opacity : 0;
+}
+
+[tooltip]:hover:before {        
+    opacity : 1;
+}
+
 .wrapper {
     width: 90%;
     margin: 0 auto;
