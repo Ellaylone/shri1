@@ -179,7 +179,7 @@ function formChannels(data){
                 channelInput.type = "checkbox";
                 channelInput.value = channel.id;
                 channelInput.id = "channel" + channel.id;
-                if((channelsCookie.length == 0 && channel.default) || (channelsCookie.length > 0 && channelsCookie.indexOf(channel.id.toString) >= 0)){
+                if((channelsCookie.length == 0 && channel.default) || (channelsCookie.length > 0 && channelsCookie.indexOf(channel.id.toString()) >= 0)){
                     channelInput.setAttribute("checked", "checked");
                     selectedChannels.push(channel);
                 }
