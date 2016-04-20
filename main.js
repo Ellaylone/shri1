@@ -245,6 +245,7 @@ function formTvGuide(data){
         chanElem.classList.add("tvevent");
         chanElem.dataset.title = "lorem ipsum";
         chanElem.setAttribute("tooltip", "lorem ipsum");
+        chanElem.style.left = (0 * 24 + 9) * currentHourWidth + (currentHourWidth / 60) * 30 + "px";
         chanElem.dataset.type = 1;
 
         var chanElemTitle = document.createElement("span");
@@ -567,7 +568,7 @@ function filterChange(e){
         }
         var tvevents = document.getElementsByClassName("tvevent");
         if(e.target.checked){
-            if(checkedFilters.length <= 1){
+            if(checkedFilters <= 1){
                 for(var i = 0; i < tvevents.length; i++){
                     if(parseInt(tvevents.item(i).dataset.type) != parseInt(e.target.value)){
                         tvevents.item(i).classList.add("tvevent__unselected");
@@ -581,11 +582,9 @@ function filterChange(e){
                 }
             }
         } else {
-            if(checkedFilters.length <= 1){
+            if(checkedFilters < 1){
                 for(var i = 0; i < tvevents.length; i++){
-                    if(parseInt(tvevents.item(i).dataset.type) != parseInt(e.target.value)){
-                        tvevents.item(i).classList.remove("tvevent__unselected");
-                    }
+                    tvevents.item(i).classList.remove("tvevent__unselected");
                 }
             } else {
                 for(var i = 0; i < tvevents.length; i++){
