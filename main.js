@@ -257,9 +257,8 @@ function showTvGuide(){
         document.getElementsByClassName("tvguide-wrapper")[0].classList.remove("hidden");
         draggable(
             document.getElementsByClassName("swiper__scrollbar__drag")[0],
-            [
-                document.getElementsByClassName("tvguide__guide")[0]
-            ]
+            document.getElementsByClassName("tvguide__guide")[0],
+            document.getElementsByClassName("tvguide-controls")[0]
         );
     }
 }
@@ -331,6 +330,7 @@ function formTimeLine(){
 
         var dateControlNum = document.createElement("span");
         dateControlNum.classList.add("datecontrol__day__number");
+        dateControlNum.dataset.day = i;
         var dateControlNumText = document.createTextNode(guideDay);
         dateControlNum.appendChild(dateControlNumText);
 
@@ -367,7 +367,7 @@ function mouseY (e) {
     return null;
 }
 
-function draggable (clickable, draggable) {
+function draggable (clickable, draggable, controls) {
     var drag = false;
     var offsetX = 0;
     var mousemoveTemp = null;
@@ -375,112 +375,121 @@ function draggable (clickable, draggable) {
     var moveTimeout = null;
     var moveDelay = 1000;
 
-    if (draggable.length > 0) {
-        var clickableWrap = clickable.parentNode;
-        var draggableWrap = draggable[0].parentNode;
-        var clickableHeadWrap = clickableWrap.parentNode;
-        var clickableArrows = clickableHeadWrap.getElementsByClassName("swiper__arrow");
-        var startOffsetX = clickableWrap.getBoundingClientRect().left;
-        var clickableLimits = [0, clickableWrap.offsetWidth - (clickable.offsetWidth + 2)];
-        var draggablePxPercent = (draggable[0].offsetWidth - draggableWrap.offsetWidth) / 100;
-        var clickablePxPercent = (clickableLimits[1]/100);
-        var draggableMultiply = draggablePxPercent / clickablePxPercent;
+    var clickableWrap = clickable.parentNode;
+    var draggableWrap = draggable.parentNode;
+    var clickableHeadWrap = clickableWrap.parentNode;
+    var clickableArrows = clickableHeadWrap.getElementsByClassName("swiper__arrow");
+    var startOffsetX = clickableWrap.getBoundingClientRect().left;
+    var clickableLimits = [0, clickableWrap.offsetWidth - (clickable.offsetWidth + 2)];
+    var draggablePxPercent = (draggable.offsetWidth - draggableWrap.offsetWidth) / 100;
+    var clickablePxPercent = (clickableLimits[1]/100);
+    var draggableMultiply = draggablePxPercent / clickablePxPercent;
 
-        function move(x) {
-            clickable.dataset.offset = parseInt(clickable.dataset.offset) + x;
+    function move(x) {
+        clickable.dataset.offset = parseInt(clickable.dataset.offset) + x;
 
-            if(clickable.dataset.offset < clickableLimits[0]){
-                clickable.dataset.offset = clickableLimits[0];
-            } else if(clickable.dataset.offset > clickableLimits[1]){
-                clickable.dataset.offset = clickableLimits[1];
-            }
-
-            clickable.style.transform = "translate3d(" + clickable.dataset.offset + "px, 0px, 0px)";
-
-            for(var i = 0; i < draggable.length; i++){
-                var xTranslate = -1 * clickable.dataset.offset * draggableMultiply;
-                draggable[i].style.transform = "translate3d(" + xTranslate + "px, 0px, 0px)";
-            }
+        if(clickable.dataset.offset < clickableLimits[0]){
+            clickable.dataset.offset = clickableLimits[0];
+        } else if(clickable.dataset.offset > clickableLimits[1]){
+            clickable.dataset.offset = clickableLimits[1];
         }
-        function mouseMoveHandler(e) {
-            e = e || window.event;
 
-            if(!drag){return true};
+        clickable.style.transform = "translate3d(" + clickable.dataset.offset + "px, 0px, 0px)";
 
-            var x = mouseX(e);
-            if (x != offsetX) {
-                move(x-offsetX);
-                offsetX = x;
-            }
+        var xTranslate = -1 * clickable.dataset.offset * draggableMultiply;
+        draggable.style.transform = "translate3d(" + xTranslate + "px, 0px, 0px)";
+    }
+    function mouseMoveHandler(e) {
+        e = e || window.event;
+
+        if(!drag){return true};
+
+        var x = mouseX(e);
+        if (x != offsetX) {
+            move(x-offsetX);
+            offsetX = x;
         }
-        function startDrag(e) {
-            e = e || window.event;
+    }
+    function startDrag(e) {
+        e = e || window.event;
 
-            offsetX=mouseX(e);
-            drag=true;
+        offsetX=mouseX(e);
+        drag=true;
 
-            if (document.body.onmousemove) {
-                mousemoveTemp = document.body.onmousemove;
-            }
-            document.body.onmousemove = mouseMoveHandler;
+        if (document.body.onmousemove) {
+            mousemoveTemp = document.body.onmousemove;
         }
-        function stopDrag() {
-            drag=false;
-            clearTimeout(moveTimeout);
-            moveDelay = 1000;
-            offsetX = clickable.dataset.offset;
+        document.body.onmousemove = mouseMoveHandler;
+    }
+    function stopDrag() {
+        drag=false;
+        clearTimeout(moveTimeout);
+        moveDelay = 1000;
+        offsetX = clickable.dataset.offset;
 
-            if (mousemoveTemp) {
-                document.body.onmousemove = mousemoveTemp;
-                mousemoveTemp = null;
-            }
+        if (mousemoveTemp) {
+            document.body.onmousemove = mousemoveTemp;
+            mousemoveTemp = null;
         }
-        function moveManager(e){
-            if(e.button != 0) return false;
-            switch (e.target){
-            case clickable:
-                startDrag(e);
-            case clickableWrap:
-                move(mouseX(e) - startOffsetX - clickable.dataset.offset - clickable.offsetWidth / 2);
-                startDrag(e);
-            default:
-                for(var i = 0; i < clickableArrows.length; i++){
-                    //NOTE targets svg / path
-                    if(e.path.indexOf(clickableArrows[i]) >= 0){
-                        var tempX = clickablePxPercent * arrowPercent;
-                        if(clickableArrows[i].classList.contains("swiper__arrow__left")){
-                            tempX *= -1;
-                        }
-                        function keepMoving(){
-                            move(tempX);
-                            if(moveDelay > 50){
-                                moveDelay /= 2;
-                            }
-                            moveTimeout = setTimeout(keepMoving, moveDelay);
-                        }
-                        keepMoving();
-                        break;
+    }
+    function moveManager(e){
+        if(e.button != 0) return false;
+        switch (e.target){
+        case clickable:
+            startDrag(e);
+        case clickableWrap:
+            move(mouseX(e) - startOffsetX - clickable.dataset.offset - clickable.offsetWidth / 2);
+            startDrag(e);
+        default:
+            for(var i = 0; i < clickableArrows.length; i++){
+                //NOTE targets svg / path
+                if(e.path.indexOf(clickableArrows[i]) >= 0){
+                    var tempX = clickablePxPercent * arrowPercent;
+                    if(clickableArrows[i].classList.contains("swiper__arrow__left")){
+                        tempX *= -1;
                     }
+                    function keepMoving(){
+                        move(tempX);
+                        if(moveDelay > 50){
+                            moveDelay /= 2;
+                        }
+                        moveTimeout = setTimeout(keepMoving, moveDelay);
+                    }
+                    keepMoving();
+                    break;
                 }
             }
         }
-        function moveToNow(){
-            var now = new Date();
-            var day = 0;
-            var hour = now.getHours();
-            if(now.getHours() <= 1){
-                day = -1;
-            } else {
-                hour -= 1;
-            }
-            moveToDay(day, hour);
-        }
-        function moveToDay(day, hour){
-            var hourBlocks = (24 * (day + 1) + hour);
-            move((hourBlocks * currentHourWidth / draggablePxPercent) * clickablePxPercent);
-        }
-        clickableHeadWrap.onmousedown = moveManager;
-        window.onmouseup = stopDrag;
-        moveToNow();
     }
+    function controlsChange(e){
+        if(e.target.classList.contains("datecontrol__day__number")){
+            var controlDays = controls.getElementsByClassName("datecontrol__day");
+            for(var i = 0; i < controlDays.length; i++){
+                controlDays[i].classList.remove("datecontrol__day__current");
+            }
+            e.target.parentNode.classList.add("datecontrol__day__current");
+            moveToDay(parseInt(e.target.dataset.day));
+        }
+    }
+    function moveToNow(){
+        var now = new Date();
+        var day = 0;
+        var hour = now.getHours();
+        if(now.getHours() <= 1){
+            day = -1;
+        } else {
+            hour -= 1;
+        }
+        moveToDay(day, hour);
+    }
+    function moveToDay(day, hour){
+        if(typeof hour == "undefined") hour = 7;
+        var hourBlocks = (24 * (day + 1) + hour);
+        var hourOffset = (hourBlocks * currentHourWidth / draggablePxPercent) * clickablePxPercent;
+        move(hourOffset - clickable.dataset.offset - clickable.offsetWidth / 2);
+    }
+    clickableHeadWrap.onmousedown = moveManager;
+    window.onmouseup = stopDrag;
+    controls.onclick = controlsChange;
+    moveToNow();
 }
