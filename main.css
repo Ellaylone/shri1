@@ -247,7 +247,7 @@ body {
     padding: 10px 20px;
 }
 
-.tvevent__selected {
+.tvevent__unselected {
     opacity: .2;
 }
 
