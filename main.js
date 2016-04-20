@@ -383,7 +383,6 @@ function draggable (clickable, draggable) {
             return false;
         }
         var start_drag = function (e) {
-            console.log("test");
             e = e || window.event;
 
             offsetX=mouseX(e);
@@ -406,7 +405,7 @@ function draggable (clickable, draggable) {
             return false;
         }
         clickable.onmousedown = start_drag;
-        clickable.onmouseup = stop_drag;
+        window.onmouseup = stop_drag;
     }
 }
 
