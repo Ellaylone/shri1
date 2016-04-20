@@ -245,6 +245,7 @@ function formTvGuide(data){
         chanElem.classList.add("tvevent");
         chanElem.dataset.title = "lorem ipsum";
         chanElem.setAttribute("tooltip", "lorem ipsum");
+        chanElem.style.left = (0 * 24 + 9) * currentHourWidth + (currentHourWidth / 60) * 30 + "px";
         chanElem.dataset.type = 1;
 
         var chanElemTitle = document.createElement("span");
