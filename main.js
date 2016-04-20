@@ -7,7 +7,7 @@ const widthChange = 767,
       smallHourWidth = 100,
       bigHourWidth = 300,
       currentHourWidth = 300;
-var channelsData, tvguideData;
+var channelsData, tvguideData, selectedChannels = [];
 
 function createCookie(name, value, days) {
     var expires;
@@ -169,6 +169,7 @@ function formChannels(data){
         });
         if(channellist !== null){
             channellist = channellist.getElementsByClassName("channellist")[0];
+            selectedChannels = [];
             data.channels.forEach(function(channel){
                 var channelElem = document.createElement("div");
                 channelElem.classList.add("channellist__channel");
@@ -180,6 +181,7 @@ function formChannels(data){
                 channelInput.id = "channel" + channel.id;
                 if((channelsCookie.length == 0 && channel.default) || (channelsCookie.length > 0 && channelsCookie.indexOf(channel.id.toString) >= 0)){
                     channelInput.setAttribute("checked", "checked");
+                    selectedChannels.push(channel);
                 }
 
                 var channelLabel = document.createElement("label");
@@ -195,6 +197,7 @@ function formChannels(data){
             });
         }
     }
+    getData(DATALIST.tvguide, formTvGuide);
     showTvGuide();
 }
 
@@ -223,6 +226,15 @@ function formTvGuide(data){
         genre.appendChild(film);
         genre.appendChild(label);
         filterElem.appendChild(genre);
+    });
+
+    var guideChannels = elem.getElementsByClassName("tvguide__guide__channels")[0];
+    guideChannels.innerHTML = "";
+    selectedChannels.forEach(function(channel){
+        var chElem = document.createElement("li");
+        chElem.classList.add("tvguide__guide__channels__channel");
+
+        guideChannels.appendChild(chElem);
     });
 
     showTvGuide();
@@ -270,7 +282,6 @@ function hideTvGuide(){
 var tvguideSwiper = new Swiper(document.getElementsByClassName("tvguide-wrapper")[0]);
 
 getData(DATALIST.channels, formChannels);
-getData(DATALIST.tvguide, formTvGuide);
 formTimeLine();
 
 var modalList = [];
