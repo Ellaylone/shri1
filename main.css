@@ -245,6 +245,7 @@ body {
     border-left: 1px solid #ededed;
     color: #898989;
     padding: 10px 20px;
+    display: inline-block;
 }
 
 .tvevent__unselected {

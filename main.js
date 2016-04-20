@@ -237,32 +237,86 @@ function formTvGuide(data){
     });
 
     var guideChannels = elem.getElementsByClassName("tvguide__guide__channels")[0];
+
     selectedChannels.forEach(function(channel){
         var chan = document.createElement("ul");
         chan.classList.add("tvguide__guide__channels__channel");
 
-        var chanElem = document.createElement("li");
-        chanElem.classList.add("tvevent");
-        chanElem.dataset.title = "lorem ipsum";
-        chanElem.setAttribute("tooltip", "lorem ipsum");
-        chanElem.style.left = (0 * 24 + 9) * currentHourWidth + (currentHourWidth / 60) * 30 + "px";
-        chanElem.dataset.type = 1;
+        var tvEvents = generateTvevents();
+        for(var i = 0; i < tvEvents.length; i++){
+            var chanElem = document.createElement("li");
+            chanElem.classList.add("tvevent");
+            chanElem.dataset.title = tvEvents[i].title;
+            chanElem.setAttribute("tooltip", tvEvents[i].description);
+            var tvEventHour = ((tvEvents[i].day + 1) * 24 + parseInt(tvEvents[i].hour / 60));
+            var tvEventMinutes = parseInt(tvEvents[i].hour % 60);
+            chanElem.style.left =  tvEventHour * currentHourWidth + (currentHourWidth / 60) * tvEventMinutes + "px";
+            chanElem.dataset.type = tvEvents[i].type;
 
-        var chanElemTitle = document.createElement("span");
-        var chanElemTitleText = document.createTextNode("lorem ipsum");
-        chanElemTitle.appendChild(chanElemTitleText);
+            var chanElemTitle = document.createElement("span");
+            var chanElemTitleText = document.createTextNode(tvEvents[i].title);
+            chanElemTitle.appendChild(chanElemTitleText);
 
-        var chanElemTime = document.createElement("span");
-        var chanElemTimeText = document.createTextNode("9:00");
-        chanElemTime.appendChild(chanElemTimeText);
+            var chanElemTime = document.createElement("span");
+            var chanElemTimeText = document.createTextNode(tvEventHour + ":" + pad(tvEventMinutes, 2));
+            chanElemTime.appendChild(chanElemTimeText);
 
-        chanElem.appendChild(chanElemTitle);
-        chanElem.appendChild(chanElemTime);
-        chan.appendChild(chanElem);
+            chanElem.appendChild(chanElemTitle);
+            chanElem.appendChild(chanElemTime);
+            chan.appendChild(chanElem);
+        }
         guideChannels.appendChild(chan);
     });
 
     showTvGuide();
+}
+
+function pad(n, width, z) {
+    z = z || '0';
+    n = n + '';
+    return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+}
+
+String.prototype.capitalizeFirstLetter = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+}
+
+Array.prototype.random = function(){return this[Math.floor(Math.random() * this.length)];};
+
+var randWords = ["новости", "вести", "врата", "египта", "история", "наука", "шар", "молодость", "теория", "исследования"];
+
+function generateTvevents(){
+    results = [];
+    var eventLength = [20, 30, 45, 60, 90];
+    var showTime = [6, 23];
+    for(var i = -1; i < TVGUIDE_DAYS; i++){
+        results[i] = [];
+        var currentTime = showTime[0] * 60;
+        while(currentTime < (showTime[1] * 60)){
+            currentTime += eventLength.random();
+            results[i].push(generateRandomTvevent(i, currentTime));
+        }
+    }
+    return results;
+}
+
+function generateRandomTvevent(day, hour){
+    var result = {
+        "title": "",
+        "description": "",
+        "day": day,
+        "hour": hour,
+        "type": [0,1,2].random()
+    };
+    for(var i = 0; i < Math.floor(Math.random() * (3 - 1 + 1)) + 1; i++){
+        result.title += randWords.random() + " ";
+    }
+    result.title = result.title.capitalizeFirstLetter().trim();
+    for(var i = 0; i < Math.floor(Math.random() * (6 - 3 + 1)) + 3; i++){
+        result.description += randWords.random() + " ";
+    }
+    result.description = result.description.capitalizeFirstLetter().trim();
+    return result;
 }
 
 function clearAll(){
