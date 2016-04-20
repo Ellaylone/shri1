@@ -307,7 +307,7 @@ function generateRandomTvevent(day, hour){
         "hour": hour,
         "type": [0,1,2].random()
     };
-    for(var i = 0; i < Math.floor(Math.random() * (3 - 1 + 1)) + 1; i++){
+    for(var i = 0; i < Math.floor(Math.random() * (2 - 1 + 1)) + 1; i++){
         result.title += randWords.random() + " ";
     }
     result.title = result.title.capitalizeFirstLetter().trim();
@@ -331,6 +331,7 @@ function clearTvGuide(){
 
 function clearFilters(){
     document.getElementsByClassName("tvguide-filters")[0].innerHTML = "";
+    document.getElementsByClassName("datecontrol")[0].innerHTML = "";
 }
 
 function clearChannels(){
