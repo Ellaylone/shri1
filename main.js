@@ -286,7 +286,7 @@ Array.prototype.random = function(){return this[Math.floor(Math.random() * this.
 var randWords = ["новости", "вести", "врата", "египта", "история", "наука", "шар", "молодость", "теория", "исследования"];
 
 function generateTvevents(){
-    results = [];
+    var results = [];
     var eventLength = [20, 30, 45, 60, 90];
     var showTime = [6, 23];
     for(var i = -1; i < TVGUIDE_DAYS; i++){
