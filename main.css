@@ -193,6 +193,7 @@ body {
     position: absolute;
     top: 33px;
     bottom: 0px;
+    z-index: 1;
 }
 
 .timemarker__marker {
