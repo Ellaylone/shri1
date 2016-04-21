@@ -290,7 +290,6 @@ function generateTvevents(){
     var eventLength = [20, 30, 45, 60, 90];
     var showTime = [6, 23];
     for(var i = -1; i < TVGUIDE_DAYS; i++){
-        results[i] = [];
         var currentTime = showTime[0] * 60;
         while(currentTime < (showTime[1] * 60)){
             currentTime += eventLength.random();
