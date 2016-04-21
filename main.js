@@ -1,13 +1,26 @@
 const DATALIST = {
-    channels: "channels.json",
-    tvguide: "tvguide.json"
+    channels: "channels.json"
 };
 const TVGUIDE_DAYS = 7;
 const widthChange = 767,
       smallHourWidth = 100,
       bigHourWidth = 300,
       currentHourWidth = 300;
-var channelsData, tvguideData, selectedChannels = [];
+var channelsData, selectedChannels = [];
+var tvtypes = [
+    {
+        "id": 0,
+        "name": "Фильм"
+    },
+    {
+        "id": 1,
+        "name": "Сериал"
+    },
+    {
+        "id": 2,
+        "name": "Спорт"
+    }
+]
 
 function createCookie(name, value, days) {
     var expires;
@@ -203,21 +216,15 @@ function formChannels(data){
             });
         }
     }
-    if(firstCall){
-        getData(DATALIST.tvguide, formTvGuide);
-    } else {
-        formTvGuide(tvguideData);
-    }
+    formTvGuide();
     showTvGuide();
 }
 
-function formTvGuide(data){
-    tvguideData = data;
-    data = JSON.parse(data);
+function formTvGuide(){
     var elem = document.getElementsByClassName("tvguide__guide")[0];
     var filterElem = document.getElementsByClassName("tvguide-filters")[0];
 
-    data.tvtype.forEach(function(type){
+    tvtypes.forEach(function(type){
         var genre = document.createElement("div");
         genre.classList.add("tvguide-filters__genre");
 
