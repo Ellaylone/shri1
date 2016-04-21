@@ -168,6 +168,7 @@ function formChannels(data){
                 var channelElem = document.createElement("li");
                 channelElem.classList.add("tvguide__channels__channel");
                 channelElem.setAttribute("style", "background-position: " + channel.imagePosition[0] + "px " + channel.imagePosition[1] + "px");
+                channelElem.setAttribute("tooltip", channel.name);
                 elem.appendChild(channelElem);
             }
         });
