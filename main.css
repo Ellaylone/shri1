@@ -265,6 +265,10 @@ body {
     color: #898989;
 }
 
+.tvevent__time{
+    color: #898989;
+}
+
 .tvevent span {
     display: block;
     padding: 0 0 7px 0;
