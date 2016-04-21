@@ -279,7 +279,7 @@ function formTvGuide(data){
 
             var chanElemTime = document.createElement("span");
             chanElemTime.classList.add("tvevent__time");
-            var chanElemTimeText = document.createTextNode((parseInt(tvEvents[i].time[0] / 60) + ":" + pad(tvEventMinutes[0], 2));
+            var chanElemTimeText = document.createTextNode(parseInt(tvEvents[i].time[0] / 60) + ":" + pad(tvEventMinutes[0], 2));
             chanElemTime.appendChild(chanElemTimeText);
 
             chanElem.appendChild(chanElemTitle);
