@@ -1,5 +1,5 @@
 const DATALIST = {
-    channels: "channels.json"
+    channels: "data/channels.json"
 };
 const TVGUIDE_DAYS = 7;
 //NOTE изменение ширины timeline__hour в зависимости от ширины окна браузера
