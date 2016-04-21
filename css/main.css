@@ -38,7 +38,7 @@ body {
 }
 
 .spinner {
-    background: url("../images/spinner.svg") no-repeat;
+    background: url('images/spinner.svg') no-repeat;
     background-size: 70px 70px;
     width: 70px;
     height: 70px;
@@ -182,7 +182,7 @@ body {
 .tvguide__channels__channel {
     width: 70px;
     height: 70px;
-    background: url("../images/channels.png") no-repeat;
+    background: url(images/channels.png) no-repeat;
     border-right: 1px solid #eee;
     border-bottom: 1px solid #eee;
 }
