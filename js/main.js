@@ -2,6 +2,7 @@ const DATALIST = {
     channels: "channels.json"
 };
 const TVGUIDE_DAYS = 7;
+//NOTE изменение ширины timeline__hour в зависимости от ширины окна браузера
 const widthChange = 767,
       smallHourWidth = 100,
       bigHourWidth = 300,
@@ -22,6 +23,7 @@ var tvtypes = [
     }
 ]
 
+//NOTE работа с куками для сохранения списка выбранных каналов
 function createCookie(name, value, days) {
     var expires;
     if (days) {
@@ -50,6 +52,7 @@ function getCookie(c_name) {
     return "";
 }
 
+//NOTE забираем json
 function getData(url, callback) {
     var req = new XMLHttpRequest();
     req.overrideMimeType("application/json");
@@ -62,6 +65,7 @@ function getData(url, callback) {
     req.send(null);
 }
 
+//NOTE ограничиваем частоту выполнения функции
 function throttle(callback, delay) {
     var timer = null;
     return function () {
@@ -73,6 +77,7 @@ function throttle(callback, delay) {
     };
 }
 
+//NOTE при изменении ширины окна меняем размер timeline__hour
 function onWindowResize(e){
     if(window.innerWidth < widthChange){
         tvguideSwiper.hourWidth = smallHourWidth;
@@ -84,6 +89,7 @@ function onWindowResize(e){
 }
 window.addEventListener("resize", throttle(onWindowResize, 100));
 
+//NOTE формирует swiper, обновляет позицию timemarker
 var Swiper = function(wrapper){
     this.wrapper = wrapper;
     this.swiper__drag = this.wrapper.getElementsByClassName("swiper__scrollbar__drag")[0];
@@ -124,6 +130,7 @@ Swiper.prototype.setMarkerPosition = function(date){
     }
 }
 
+//NOTE модальное со списком каналов
 var Modal = function(elem, confirm, toggle){
     this.elem = elem;
     this.overlay = document.getElementById("overlay");
@@ -133,6 +140,7 @@ var Modal = function(elem, confirm, toggle){
         function(){ that.hide(); },
         false
     );
+    //NOTE обновление tvguide по выбранным каналам
     this.elem.getElementsByClassName("modal__confirm")[0].addEventListener(
         "click",
         function(){
@@ -140,8 +148,8 @@ var Modal = function(elem, confirm, toggle){
                 that.hide();
                 hideTvGuide();
                 clearAll();
-                formChannels(channelsData);
                 formTimeLine();
+                formChannels(channelsData);
             }
         },
         false
@@ -163,6 +171,7 @@ Modal.prototype.hide = function(){
     return this;
 }
 
+//NOTE формируем список каналов из json
 function formChannels(data){
     var firstCall = false;
     if(data != channelsData){
@@ -217,9 +226,9 @@ function formChannels(data){
         }
     }
     formTvGuide();
-    showTvGuide();
 }
 
+//NOTE формируем жанры и список tvevent
 function formTvGuide(){
     var elem = document.getElementsByClassName("tvguide__guide")[0];
     var filterElem = document.getElementsByClassName("tvguide-filters")[0];
@@ -264,6 +273,7 @@ function formTvGuide(){
                 tvEventMinutes.push(parseInt(tvEvents[i].time[j] % 60));
             }
 
+            //NOTE рассчитываем координаты начала и конца tvevent
             var leftOffset = tvEventHour[0] * currentHourWidth + (currentHourWidth / 60) * tvEventMinutes[0];
             var rightOffset = tvEventHour[1] * currentHourWidth + (currentHourWidth / 60) * tvEventMinutes[1];
             chanElem.style.left = leftOffset + "px";
@@ -273,6 +283,7 @@ function formTvGuide(){
             var chanElemTitle = document.createElement("span");
             chanElemTitle.classList.add("tvevent__title");
             var timemarker = document.getElementsByClassName("timemarker")[0];
+            //NOTE проверяем положение tvevent по отношению к timemarker
             if(parseInt(timemarker.dataset.offset) > rightOffset){
                 chanElemTitle.classList.add("tvevent__title__past");
             } else {
@@ -299,6 +310,7 @@ function formTvGuide(){
     showTvGuide();
 }
 
+//NOTE генерируем рандомные tvevent
 function pad(n, width, z) {
     z = z || '0';
     n = n + '';
@@ -348,6 +360,7 @@ function generateRandomTvevent(day, time){
     return result;
 }
 
+//NOTE чистим все элементы перед обновлением
 function clearAll(){
     clearTvGuide();
     clearChannels();
@@ -369,22 +382,18 @@ function clearChannels(){
     document.getElementById("channellistModal").getElementsByClassName("channellist")[0].innerHTML = "";
 }
 
-var showCount = 0;
+//NOTE показываем спиннер пока готовим tvguide
 function showTvGuide(){
-    showCount++;
-    if(showCount >= 2){
-        document.getElementsByClassName("spinner")[0].classList.add("hidden");
-        document.getElementsByClassName("tvguide-wrapper")[0].classList.remove("hidden");
-        draggable(
-            document.getElementsByClassName("swiper__scrollbar__drag")[0],
-            document.getElementsByClassName("tvguide__guide")[0],
-            document.getElementsByClassName("tvguide-controls")[0]
-        );
-    }
+    document.getElementsByClassName("spinner")[0].classList.add("hidden");
+    document.getElementsByClassName("tvguide-wrapper")[0].classList.remove("hidden");
+    draggable(
+        document.getElementsByClassName("swiper__scrollbar__drag")[0],
+        document.getElementsByClassName("tvguide__guide")[0],
+        document.getElementsByClassName("tvguide-controls")[0]
+    );
 }
 
 function hideTvGuide(){
-    showCount = 0;
     document.getElementsByClassName("spinner")[0].classList.remove("hidden");
     document.getElementsByClassName("tvguide-wrapper")[0].classList.add("hidden");
 }
@@ -418,6 +427,7 @@ document.getElementById("overlay").addEventListener("click", function(){
     });
 }, false);
 
+//NOTE формируем timeline на неделю
 function formTimeLine(){
     var now = new Date().getTime();
     var day = 1000 * 60 * 60 * 24;
@@ -458,10 +468,9 @@ function formTimeLine(){
         dateControlWrap.appendChild(dateControl);
     }
     tvguideSwiper.init();
-    showTvGuide();
 }
 
-
+//NOTE координаты курсора для совместимости браузеров
 function mouseX (e) {
     if (e.pageX) {
         return e.pageX;
@@ -486,6 +495,7 @@ function mouseY (e) {
     return null;
 }
 
+//NOTE скролл tvguide
 function draggable (clickable, draggable, controls) {
     var drag = false;
     var offsetX = 0;
@@ -507,6 +517,7 @@ function draggable (clickable, draggable, controls) {
     var controlDays = controls.getElementsByClassName("datecontrol__day");
     var nowLimits = [];
 
+    //NOTE собственно перемещение
     function move(x) {
         clickable.dataset.offset = parseInt(clickable.dataset.offset) + x;
 
@@ -518,6 +529,7 @@ function draggable (clickable, draggable, controls) {
 
         clickable.style.transform = "translate3d(" + clickable.dataset.offset + "px, 0px, 0px)";
 
+        //NOTE оффсеты для swiper и tvguide разные
         var xTranslate = -1 * clickable.dataset.offset * draggableMultiply;
         draggable.style.transform = "translate3d(" + xTranslate + "px, 0px, 0px)";
         var dayWidth = -1 * 24 * currentHourWidth;
@@ -529,6 +541,7 @@ function draggable (clickable, draggable, controls) {
             controlsNow.classList.add("hidden");
         }
     }
+    //NOTE swiper__scrollbar__drag следует за курсором
     function mouseMoveHandler(e) {
         e = e || window.event;
 
@@ -562,15 +575,19 @@ function draggable (clickable, draggable, controls) {
             mousemoveTemp = null;
         }
     }
+    //NOTE в зависимости от кликнутого элемента определяем движение
     function moveManager(e){
         if(e.button != 0) return false;
         switch (e.target){
         case clickable:
+            //NOTE сразу тащим
             startDrag(e);
         case clickableWrap:
+            //NOTE перемещаемся к месту клика, затем тащим
             move(mouseX(e) - startOffsetX - clickable.dataset.offset - clickable.offsetWidth / 2);
             startDrag(e);
         default:
+            //NOTE при клике на стрелки двигаем на заданное значение
             for(var i = 0; i < clickableArrows.length; i++){
                 //NOTE targets svg / path
                 if(e.path.indexOf(clickableArrows[i]) >= 0){
@@ -578,6 +595,7 @@ function draggable (clickable, draggable, controls) {
                     if(clickableArrows[i].classList.contains("swiper__arrow__left")){
                         tempX *= -1;
                     }
+                    //NOTE продолжаем двигать если стрелку не отпустили
                     function keepMoving(){
                         move(tempX);
                         if(moveDelay > 50){
@@ -591,6 +609,7 @@ function draggable (clickable, draggable, controls) {
             }
         }
     }
+    //NOTE изменение активного дня
     function markChange(day){
         for(var i = 0; i < controlDays.length; i++){
             if(parseInt(controlDays[i].getElementsByClassName("datecontrol__day__number")[0].dataset.day) == day){
@@ -609,10 +628,12 @@ function draggable (clickable, draggable, controls) {
             moveToDay(parseInt(e.target.dataset.day));
         }
     }
+    //NOTE tvguide скроллится до сегодняшнего дня и времени
     function moveToNow(){
         var now = new Date();
         var day = 0;
         var hour = now.getHours();
+        //NOTE timemarker должен быть ближе к центру
         if(now.getHours() <= 1){
             day = -1;
             hour = 23;
@@ -626,6 +647,7 @@ function draggable (clickable, draggable, controls) {
             parseInt(controlsNow.dataset.offset) + (arrowPercent * clickablePxPercent)
         ];
     }
+    //NOTE движемся к определеному дню и времени
     function moveToDay(day, hour){
         if(typeof hour == "undefined") hour = 7;
         var hourBlocks = (24 * (day + 1) + hour);
@@ -639,6 +661,7 @@ function draggable (clickable, draggable, controls) {
     moveToNow();
 }
 
+//NOTE фильтрация по типу фильма
 var tvguideFilters = document.getElementsByClassName("tvguide-filters")[0];
 tvguideFilters.onchange = filterChange;
 var filters = tvguideFilters.getElementsByTagName("input");
